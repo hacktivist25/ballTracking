@@ -25,3 +25,5 @@ Ppour cela :
 - poids d'une image (RGB vs noir et blan)
 - temps de traitement (caractérisation vitesse du processeur)
 - média pour visualiser les données
+
+A LA FIN : on doit avoi une idée des différentes problématiques sous-jacentes à ce traitement d'image, il faudra pouvoir élaborer un cahier des charges, ou à minima une feuille de route assez détaillée sur les étapes, qui permettront d'étoffer un cahier des charges construit au fur et à mesure
