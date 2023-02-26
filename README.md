@@ -1,7 +1,7 @@
 # ballTracking
 ball tracking with a raspbery pi model 4B and its' camera, done by Hough Transform
 
-====FIRST SESSION 02/20/2023====
+====PREMIERE SEANCE 02/20/2023====
 dégrossissage du projet : MindMap des étapes en gros, que l'on va dégrossir de notre côté : 
 ![mindmap initiale](https://user-images.githubusercontent.com/125929174/221438325-de05e4b7-b414-42c5-928b-45e290be5663.jpg)
 
@@ -64,3 +64,14 @@ rien de neuf, juste un énième exemple
 
 - https://www.uio.no/studier/emner/matnat/ifi/INF4300/h09/undervisningsmateriale/hough09.pdf
 - énième exemple
+
+===DEUXIEME SEANCE 27/02/23===
+on va avoir besoin peut-être de ça : https://roboticsbackend.com/raspberry-pi-run-python-script-in-the-terminal/
+et des documents au dessus pour le programme
+et les documents au début sur le site oficiel de raspberrypi pour avoir les modules caméra, ect
+
+Objectifs de la séance :
+IL faut pouvoir avoir python, et deux modules numpy et et matplotlib s'ils n'y sont pas nativement
+On va donc effectuer la transformée de hought d'une simple ligne tracée quelquepart : il faut prendre en main le module caméra, transmettre l'image, la traiter, et faire la transformée
+On s'occupera plus tard des spécifications sur la mémoire vive disponible, le temps de calcul, les liaisons caméra/processeur, les protocoles de communication, ect
+Pour le moment, on manipule bêtement pour savoir comment marche le matériel, ensuite le reste roulera tout seul
