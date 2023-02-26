@@ -26,4 +26,15 @@ Ppour cela :
 - temps de traitement (caractérisation vitesse du processeur)
 - média pour visualiser les données
 
-A LA FIN : on doit avoi une idée des différentes problématiques sous-jacentes à ce traitement d'image, il faudra pouvoir élaborer un cahier des charges, ou à minima une feuille de route assez détaillée sur les étapes, qui permettront d'étoffer un cahier des charges construit au fur et à mesure
+A LA FIN : on doit avoir une idée des différentes problématiques sous-jacentes à ce traitement d'image, il faudra pouvoir élaborer un cahier des charges, ou à minima une feuille de route assez détaillée sur les étapes, qui permettront d'étoffer un cahier des charges construit au fur et à mesure
+
+Avant la séance n°2 du 27 février, écumage des articles suivants :
+- https://towardsdatascience.com/lines-detection-with-hough-transform-84020b3b1549
+  Donne un code déjà tout fait et expliqué sur la transformée d hough et son utilisation sur la reconnaissance de lignes droites : il utilise uniquement les modules numpy et matplotlib, deux modules bien connus. la notion de matrice accumulatrice est expliquée, et la quantification des données est évoquée
+<img width="508" alt="Principe hough" src="https://user-images.githubusercontent.com/125929174/221435980-d601a1cd-9358-4c37-b273-7a885e83e502.png">
+
+- https://homepages.inf.ed.ac.uk/rbf/HIPR2/hough.htm
+- https://sbme-tutorials.github.io/2021/cv/notes/4_week4.html
+- https://scikit-image.org/docs/dev/auto_examples/edges/plot_line_hough_transform.html
+- https://www.sciencedirect.com/topics/computer-science/hough-transforms
+- https://www.uio.no/studier/emner/matnat/ifi/INF4300/h09/undervisningsmateriale/hough09.pdf
