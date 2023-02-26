@@ -2,7 +2,9 @@
 ball tracking with a raspbery pi model 4B and its' camera, done by Hough Transform
 
 ====FIRST SESSION 02/20/2023====
-dégrossissage du projet : MindMap des étapes en gros, que l'on va dégrossir de notre côté : """"""""""""INSERER PHOTO MINDMAP INITIAL"""""""
+dégrossissage du projet : MindMap des étapes en gros, que l'on va dégrossir de notre côté : 
+![mindmap initiale](https://user-images.githubusercontent.com/125929174/221438325-de05e4b7-b414-42c5-928b-45e290be5663.jpg)
+
 
 Premier réflexe : prendre connaissance de l'outil de travail principal : la transformée de Hough
 On comprend que c'est un changement de repère représentant une droite par un point dans l'espace de Hought (r,Theta)
@@ -40,6 +42,11 @@ avec (a,b) coordonnées du centre du cerle, r son rayon, la matrice accumulatric
 il propose également une série d'exercices pour prendre en main la transformée de hought sur des figures simples, puis des cercles
 
 - https://sbme-tutorials.github.io/2021/cv/notes/4_week4.html
-- https://scikit-image.org/docs/dev/auto_examples/edges/plot_line_hough_transform.html
+<img width="339" alt="principe" src="https://user-images.githubusercontent.com/125929174/221437736-a7ab1999-426d-4f61-91de-2b3ba449cbb5.png">
+rien de neuf, juste un énième exemple
+
 - https://www.sciencedirect.com/topics/computer-science/hough-transforms
+- recueil d'articles scientifiques pour la transformée de hought de haut niveau (optimisation temps de calcul, ect :  à utiliser en fin de projet
+
 - https://www.uio.no/studier/emner/matnat/ifi/INF4300/h09/undervisningsmateriale/hough09.pdf
+- énième exemple
