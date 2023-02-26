@@ -17,6 +17,19 @@ Commencer par :
 - initialiser le raspberrypi avec raspberry pi imager, et le charger sur la carte via microSD
 - prendre une image simple (une ligne tracée sur un papier, une séparation au sol) et trouver l'horizon
 
+
+// Pour initialiser raspberry
+// https://www.tomshardware.com/how-to/set-up-raspberry-pi
+// Il faut raspberryPi Imager
+
+// idée des specs raspberryPi
+<img width="404" alt="apercu specs RaspBerryPi 4B" src="https://user-images.githubusercontent.com/125929174/221440740-82a2a363-295b-4e3e-8376-e7a1f152652a.png">
+
+---documentation raspberry---
+https://www.raspberrypi.com/documentation/
+
+
+
 Cela va nous permettre de comprendre l'outil de travail principal
 
 Pour la prochaine fois, il faudra maîtriser le concept de l'espace de Hough, comprendre la théorie derrière (matrices accumulatrices, représentations d'une droite, d'un cercle dans cet espace
