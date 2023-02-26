@@ -32,8 +32,13 @@ Avant la séance n°2 du 27 février, écumage des articles suivants :
 - https://towardsdatascience.com/lines-detection-with-hough-transform-84020b3b1549
   Donne un code déjà tout fait et expliqué sur la transformée d hough et son utilisation sur la reconnaissance de lignes droites : il utilise uniquement les modules numpy et matplotlib, deux modules bien connus. la notion de matrice accumulatrice est expliquée, et la quantification des données est évoquée
 <img width="508" alt="Principe hough" src="https://user-images.githubusercontent.com/125929174/221435980-d601a1cd-9358-4c37-b273-7a885e83e502.png">
+il suffit de prendre en input une image, faire la détextion de bord (filtre de Canny par exemple, ou méthode des gradients, qui permet en plus d'optimiser l'algorithme, Roberts Cross, Sobel), et boucler pour chaque edge point sur les angles theta, remplir la matrice accumulatrice, et les maxima locaux de cette matrice accumulatrice représenteront des droites probables
 
 - https://homepages.inf.ed.ac.uk/rbf/HIPR2/hough.htm
+idem, mais aborde le fait que pour une détection de cerle, dont l'équation serait : <img width="168" alt="équation cercle" src="https://user-images.githubusercontent.com/125929174/221437115-ea9d1250-0f87-4447-a062-ae465496a613.png">
+avec (a,b) coordonnées du centre du cerle, r son rayon, la matrice accumulatrice est désormais en 3 dimensions
+il propose également une série d'exercices pour prendre en main la transformée de hought sur des figures simples, puis des cercles
+
 - https://sbme-tutorials.github.io/2021/cv/notes/4_week4.html
 - https://scikit-image.org/docs/dev/auto_examples/edges/plot_line_hough_transform.html
 - https://www.sciencedirect.com/topics/computer-science/hough-transforms
