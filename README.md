@@ -23,9 +23,10 @@ Commencer par :
 // Il faut raspberryPi Imager
 
 // idée des specs raspberryPi
+
 <img width="404" alt="apercu specs RaspBerryPi 4B" src="https://user-images.githubusercontent.com/125929174/221440740-82a2a363-295b-4e3e-8376-e7a1f152652a.png">
 
----documentation raspberry---
+-----documentation raspberry-----
 https://www.raspberrypi.com/documentation/
 
 
