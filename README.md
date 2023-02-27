@@ -75,3 +75,8 @@ IL faut pouvoir avoir python, et deux modules numpy et et matplotlib s'ils n'y s
 On va donc effectuer la transformée de hought d'une simple ligne tracée quelquepart : il faut prendre en main le module caméra, transmettre l'image, la traiter, et faire la transformée
 On s'occupera plus tard des spécifications sur la mémoire vive disponible, le temps de calcul, les liaisons caméra/processeur, les protocoles de communication, ect
 Pour le moment, on manipule bêtement pour savoir comment marche le matériel, ensuite le reste roulera tout seul
+
+
+
+pour la caméra, son initialisation :
+- https://raspberry-lab.fr/Composants/Utilisation-Camera-sur-Raspberry-Pi-Francais/
