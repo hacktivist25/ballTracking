@@ -80,3 +80,5 @@ Pour le moment, on manipule bêtement pour savoir comment marche le matériel, e
 
 pour la caméra, son initialisation :
 - https://raspberry-lab.fr/Composants/Utilisation-Camera-sur-Raspberry-Pi-Francais/
+pour rpendre en main l'IDE
+- https://realpython.com/python-raspberry-pi/#getting-to-know-the-raspberry-pi
