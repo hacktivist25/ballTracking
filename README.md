@@ -81,4 +81,22 @@ Pour le moment, on manipule bêtement pour savoir comment marche le matériel, e
 pour la caméra, son initialisation :
 - https://raspberry-lab.fr/Composants/Utilisation-Camera-sur-Raspberry-Pi-Francais/
 pour rpendre en main l'IDE
-- https://realpython.com/python-raspberry-pi/#getting-to-know-the-raspberry-pi
+- https://realpython.com/python-raspberry-pi/#getting-to-know-the-raspberry-p
+
+====TRAVAIL ACCOMPI====
+reconfiguraiton de la carte SD
+Chargement des modules utiles sur le raspberry : IDE Mü, qui contient déjà toutes les bibliopthèques que l'on souhaite (matplotlob.pyplot, numpy, picamera, math)
+configuration VNC
+Configuration WIFI
+Configuration Caméra (détection par le module, utilisabilité)
+Prise en main du module picamera : codage d'une fonction takePhoto, ave la qualité que l'on veut
+Prise d'une photo ENFIN CORRECTE d'une ligne sur du papier blanc
+Transformation de celle-ci en noir et blanc : parfait
+
+====PENDANT CE TEMPS LA A POUDLARD (chez moi)====
+compréhension de la transformé de hough sur une ligne : manipulation de matrices accumulatrices, utilisation des deux formules du dessus rhp = xcostheta+ysintheta et la transformée inverse pour vérifier que cela marchait bien
+
+===POUR LA PROCHAINE FOIS===
+Se renseigner sur la transformée de hough en cercle
+Voir le filtre de Canny ou autres (lequel prend le moins de temps, bruite le moins, pour notre usage)
+un peu de specs sur le matériel utilisé et les process effectués
