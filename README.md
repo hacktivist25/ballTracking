@@ -100,3 +100,13 @@ compréhension de la transformé de hough sur une ligne : manipulation de matric
 Se renseigner sur la transformée de hough en cercle
 Voir le filtre de Canny ou autres (lequel prend le moins de temps, bruite le moins, pour notre usage)
 un peu de specs sur le matériel utilisé et les process effectués
+
+========TROISIEME SEANCE du 06/03/2023======
+on a élaboré correctement l'algorithme de transformation de hough, obtenu cette image de la transformée, et repéré le maximum, et tracé la droite reconnue : ça marche...
+pas plus de choses à dire, ça a été long mais efficace, pas de sources supplémentaires
+
+===pendant ce temps à poudlard===
+mise sous forme correcte de l'algorithme, des graphes, pour bien séquencer la chose et la rendre limpide
+
+======QUATRIEME SEANCE======
+
