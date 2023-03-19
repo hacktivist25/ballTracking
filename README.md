@@ -108,5 +108,10 @@ pas plus de choses à dire, ça a été long mais efficace, pas de sources suppl
 ===pendant ce temps à poudlard===
 mise sous forme correcte de l'algorithme, des graphes, pour bien séquencer la chose et la rendre limpide
 
-======QUATRIEME SEANCE======
-
+======QUATRIEME SEANCE du 13/03/2023======
+finissage de l'algorithme de détection d'horizon, condensage sous un script qui "fait tout" : prise de photo, demande de treshold, ect... rine à dire sur cette séance, juste du codage et du test à profusion
+ ===pendant ce temps à poudlard===
+ automatiser le threshold, rendre le code beaucoup plus simple, y ajouter des modulation de résolution de distance, angulaire, pour moduler la vitesse de traitement et la précision
+ 
+ =====CINQUIEME SEANCE DU 21/03/2023=====
+ Malheureusement, l'automatisation du treshold laisse à désirer, mais la vitesse de l'algorithme en changeant la résolution en distance et angulaire est folle, de l'ordre de 2 ou 3 secondes pour faire le traitement complet
