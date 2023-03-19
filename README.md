@@ -95,6 +95,7 @@ Transformation de celle-ci en noir et blanc : parfait
 
 ====PENDANT CE TEMPS LA A POUDLARD (chez moi)====
 compréhension de la transformé de hough sur une ligne : manipulation de matrices accumulatrices, utilisation des deux formules du dessus rhp = xcostheta+ysintheta et la transformée inverse pour vérifier que cela marchait bien
+https://github.com/hacktivist25/ballTracking/blob/838cb90465e8612091c43e116d69d6bc55a47782/test%20premi%C3%A8re%20droite%20equation
 
 ===POUR LA PROCHAINE FOIS===
 Se renseigner sur la transformée de hough en cercle
