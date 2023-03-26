@@ -34,11 +34,4 @@ l'équation doit être 0.0239x + 871.2 dans le repère de l'image
 
 
 Une fois la transformée de Hough faite, on obtient rho et theta comme suit
-
-92 ; 858 en pixels
-92-45 = 47° = theta car le repère va de -45 à 135 
-rho = 858
-
-utilisons cela dans l'équation y = -cos(theta)/sin(theta) x + rho / sin(theta)
-
-
+nous utilisons cela dans l'équation y = -cos(theta)/sin(theta) x + rho / sin(theta), on on trouve l'équation 
