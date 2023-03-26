@@ -12,42 +12,33 @@ Le repère : x vers la droite, y vers le bas, les repères d'images sur python e
 
 
 pixels des extrémités :
-- Un pixel en   (1040 ; 894)
-- l'autre en    (2790 ; 939)
+- Un pixel en   (1036 ; 896)
+- l'autre en    (2790 ; 938)
+
 
 
 on a une équation de la forme ax+bas
 a=(y2-y1)/(x2-x1)
- = (939 - 894) / (2790 - 1040)
- = 9/350 = 0,0257
+ = (938 - 896) / (2790 - 1036)
+ = 0,0239
  
 de là :
 b=y2-ax2
- = 939 - (9/350)*2790
- = 867,5 
+ = 938 - 0,0239*2790
+ = 871,2
  
 ----------------------------------------------------------------
-l'équation doit être 0.0257x + 867.5 dans le repère de l'image
+l'équation doit être 0.0239x + 871.2 dans le repère de l'image
 ----------------------------------------------------------------
 
 
 
 Une fois la transformée de Hough faite, on obtient rho et theta comme suit
+
 92 ; 858 en pixels
 92-45 = 47° = theta car le repère va de -45 à 135 
 rho = 858
 
 utilisons cela dans l'équation y = -cos(theta)/sin(theta) x + rho / sin(theta)
 
-y = 0.03 x + 1010 l'équation de la droite 
-giga merde
-la résolution angulaire doit être améliorée : on ressaye avec des pa de 0.1°
 
-CTTE FOIS CA MAAAAAARCHE !!
-917 PIXEL EN X soit 91.7°
-861 PIXELS EN Y
-
-THETA = 91.7
-RHO = 861
-
-ON OBTIENT Y = 0.0296x + 861 !!!!! Approximation validée, ggwp les zamis
