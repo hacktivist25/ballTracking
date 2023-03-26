@@ -116,3 +116,6 @@ finissage de l'algorithme de détection d'horizon, condensage sous un script qui
  
  =====CINQUIEME SEANCE DU 21/03/2023=====
  Malheureusement, l'automatisation du treshold laisse à désirer, mais la vitesse de l'algorithme en changeant la résolution en distance et angulaire est folle, de l'ordre de 2 ou 3 secondes pour faire le traitement complet
+
+====SIXIEME SEANCE====
+Mise en forme de la transformée de hought d'un cercle de rayon connu, qui prend 2 secondes, et d'un cercle inconnu, qui ne marche pas encore : la décision du max de la matrice est compliqué...
