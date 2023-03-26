@@ -119,3 +119,7 @@ finissage de l'algorithme de détection d'horizon, condensage sous un script qui
 
 ====SIXIEME SEANCE====
 Mise en forme de la transformée de hought d'un cercle de rayon connu, qui prend 2 secondes, et d'un cercle inconnu, qui ne marche pas encore : la décision du max de la matrice est compliqué...
+https://theailearner.com/tag/cv2-houghcircles/ avec github de 3000 LIGNES sur la transformée de houg par graient optimisée sur python en utilisant la bibliothèque cv2
+on passe d'une matrice 3D à 1D !
+Notre algorithme ne marce pas et prend une 20 aine de secondes en diminuant la résolution angulaire et distancielle de façon assez drasttique : il faut le prendre en main
+https://arxiv.org/ftp/arxiv/papers/1405/1405.7242.pdf papier de recherche d'optimisation mathématique dessus
