@@ -26,7 +26,8 @@ on va voir ce que renvoie l'algorithme que l'on a élaboré pour différentes r�
 Tout d'abord, l'image de base déjà montrée au dessus est soumis à l'algorithme.
 L'algorithme la transforme en noir et blanc et prend les contours avec un seuillage automatique sur un filtre de canny :
 
-![Uploading ligne NB.jpg…]()
+![ligne NB](https://github.com/hacktivist25/ballTracking/assets/125929174/13e767e5-f338-47de-9625-d04c508b7a22)
+
 
 
 Une fois la transformée de Hough faite, on obtient rho et theta comme suit : en traçant un plan de hough qui utilise l'équation suivante :
