@@ -1,41 +1,7 @@
-infos sur le test ligne
-
-On ouvre la photo LIGNE_NB sur paint pour avoir ses coordonnées en pixel, et on calcule nous-m^^eme à la main l'équation de la droite dans le repère de l'image
-Le but est de conna^^itre le résultat pour voir si l'algorithme ne fait pas n'importe quoi
-
-
-===============================================
-NOTE IMPORTANTE :
-Le repère : x vers la droite, y vers le bas, les repères d'images sur python et image sont les mêmes
-===============================================
-
-![mindmap initiale](https://user-images.githubusercontent.com/125929174/221438325-de05e4b7-b414-42c5-928b-45e290be5663.jpg)
-
-pixels des extrémités :
-- Un pixel en   (1036 ; 896)
-- l'autre en    (2790 ; 938)
-
-
-
-on a une équation de la forme ax+bas
-a=(y2-y1)/(x2-x1)
- = (938 - 896) / (2790 - 1036)
- = 0,0239
- 
-de là :
-b=y2-ax2
- = 938 - 0,0239*2790
- = 871,2
- 
-----------------------------------------------------------------
-l'équation doit être 0.0239x + 871.2 dans le repère de l'image
-----------------------------------------------------------------
-
-
-
-infos sur le test ligne
 On ouvre la photo LIGNE_NB sur paint pour avoir ses coordonnées en pixel, et on calcule nous-même à la main l'équation de la droite dans le repère de l'image
 Le but est de connaître le résultat pour voir si l'algorithme ne fait pas n'importe quoi
+
+
 ===============================================
 NOTE IMPORTANTE :
 Le repère : x vers la droite, y vers le bas, les repères d'images sur python et image sont les mêmes
