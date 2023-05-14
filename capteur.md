@@ -3,3 +3,6 @@ https://github.com/FaBoPlatform/FaBo9AXIS-MPU9250-Python
 
 PHOTO Commandes et résultats du capteurs
 
+Github utilisation capteur de distance
+https://github.com/Gadgetoid/VL53L0X-python
+
