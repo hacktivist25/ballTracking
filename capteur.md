@@ -16,3 +16,6 @@ le capteur de distance point plus ou moins au milieu du rectangle
 ultimaker3
 ligiciel cura
 exportation STL
+
+http://www.optique-ingenieur.org/fr/cours/OPI_fr_M04_C01/co/Grain_OPI_fr_M04_C01_2.html
+Pour se repérer dans un repère coordonées
