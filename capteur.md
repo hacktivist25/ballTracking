@@ -38,3 +38,4 @@ TESTREPERE
 angle : -46°
 distance au centre optique : 48cm
 
+diamètre balle : 3cm
