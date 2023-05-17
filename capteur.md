@@ -21,3 +21,20 @@ http://www.optique-ingenieur.org/fr/cours/OPI_fr_M04_C01/co/Grain_OPI_fr_M04_C01
 Pour se repérer dans un repère coordonées
 
 https://www.enib.fr/~kerhoas/rescapt_cours_mpu9250.html pour l'orientation !!!
+
+no mesures serot fauites SANS ROLL : il n'y a que le pitch qui sera différent de 0 !!!!!!!!!!!!!!!!!!
+
+
+ANGLE DE BASE : 
+-85.2°
+
+TEST FINAL
+angle -43.9°
+distance au centre optique : 
+34.3cm
+
+
+TESTREPERE
+angle :
+distance au centre optique : 
+
