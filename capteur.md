@@ -35,6 +35,6 @@ distance au centre optique :
 
 
 TESTREPERE
-angle :
-distance au centre optique : 
+angle : -46°
+distance au centre optique : 48cm
 
