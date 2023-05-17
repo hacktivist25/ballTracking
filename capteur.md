@@ -19,3 +19,5 @@ exportation STL
 
 http://www.optique-ingenieur.org/fr/cours/OPI_fr_M04_C01/co/Grain_OPI_fr_M04_C01_2.html
 Pour se repérer dans un repère coordonées
+
+https://www.enib.fr/~kerhoas/rescapt_cours_mpu9250.html pour l'orientation !!!
