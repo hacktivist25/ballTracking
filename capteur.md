@@ -39,3 +39,6 @@ angle : -46°
 distance au centre optique : 48cm
 
 diamètre balle : 3cm
+
+
+https://www.raspberrypi.com/documentation/accessories/camera.html
