@@ -8,6 +8,7 @@ NOTE IMPORTANTE :
 Le repère : x vers la droite, y vers le bas, les repères d'images sur python et image sont les mêmes : l'origine se situe tout en haut à gauche de l'image
 
 ![ligne](https://github.com/hacktivist25/ballTracking/assets/125929174/8ee5481b-38cc-4e5d-a863-20aced7b4acb)
+
 pixels des extrémités :
 - Un pixel en   (1036 ; 896)
 - l'autre en    (2790 ; 938)
@@ -44,10 +45,12 @@ Pour chaque point d'intérêt (qui est un point de contour, trouvé par un filtr
      Calculer le rho correspondant à chaque fois, à l'aide de la formule de changement de repère [2] :
 
 ![equa de base](https://github.com/hacktivist25/ballTracking/assets/125929174/ba059c49-816b-48e6-bb4e-31d5baab5d81)
+
      Placer le point (theta, rho) sur le plan
  
  Une fois cela fait, le plan de hough devrai ressembler à quelque chose comme cela :
  ![plan Hough](https://github.com/hacktivist25/ballTracking/assets/125929174/e1ef9c5d-9ce2-44f3-a5ce-d1d6e487ed46)
+ 
  Le point le plus blanc, c'est à dire celui sur lequel beaucoup de droites passe, est un maximum, et est l'endroit sur le plan de hough où il est probable qu'il y aie une droite sur le plan cartésien
  On récupère alors les coordonnées de ce point maximal, et on est capable d'en donner l'équation dans le plan cartésien avec la transformée inverse [2]:
  
@@ -76,28 +79,43 @@ L'algorithme la transforme en noir et blanc et prend les contours avec un seuill
 
 ![ligne NB](https://github.com/hacktivist25/ballTracking/assets/125929174/13e767e5-f338-47de-9625-d04c508b7a22)
 
+On construit ensuite le fameux plan de hough avec une matrice accumulatrice : 
+On initialise une matrice avec une taille pouvant accueillir toutes les coordonnées possibles de droites dnas l'image : 
+Theta varie de 0 à 180°, et la distance entre l'origine du repère (le point tout en haut à gauche de l'image) maximale est de la taille de la diagonale de l'image, c'est à dire  D = sqrt(3280² + 1845²)
+La matrice accumulatrice est donc de taille Dx180
+Et pour chaque point auquel on applique la transformée (LIGNE 41), on incrémente de 1 l'élément de la matrice accumulatrice [rho,theta] : on trouvera ainsi les maximas, c'est à dire les points (rho,theta) du plan de hought pour lesquels le plus de points d'intérêts peuvent passer
+Cetta matrice a aussi le bon goût de pouvoir réduire sa taille suivant si l'on veut optimiser le temps de calcul en sacrifiant un peu de précision : on peut créer une matrice accumulatrice deux fois plus petite, pour cela il suffit de ne s'intéresser qu'à un point sur quatre de l'image en noir et blanc
 
 
-Une fois la transformée de Hough faite, on obtient rho et theta comme suit : en traçant un plan de hough qui utilise l'équation suivante :
 
-<img width="508" alt="Principe hough" src="https://github.com/hacktivist25/ballTracking/assets/125929174/1620bebb-d5fd-447a-9c3f-de50598e0162">
-
-nous utilisons cela dans l'équation y = -cos(theta)/sin(theta) x + rho / sin(theta), on on trouve l'équation de la droite ainsi :
-
-Voici quelques tests : tout d'abord avec une résolution en distance de 1 pour 1, et une résolution angulaire d'1° :
+Voici quelques tests : tout d'abord avec une résolution en distance de 1 pour 1, et une résolution angulaire d'1° : C'est à dire que lors de la transformation de Hough (LIGNE 41), on fait varier theta d'un degré.   Temps d'exécution : 1.3 secondes
 ![plan de hough reperage max](https://github.com/hacktivist25/ballTracking/assets/125929174/ea53bd0a-e7a0-49d4-a89d-3df8f85f1ae4)
+
+On a notre plan de hough tracé (on représente la matrice accumulatrice sous forme d'image), et on repère le maximum global de la matrice accumulatrice (rectangle gris) et on a alors les "coordonnées de la droite" dans le plan de hough, et de là on peut se servir de la transformée inverse (LIGNE 54)
 ![droite reconnue](https://github.com/hacktivist25/ballTracking/assets/125929174/471c3aa3-9360-4df5-bec8-a7f5736f51d5)
+
+On trouve alors cette droite, que l'on transpose sur l'image brute de la caméra
 ![rendu](https://github.com/hacktivist25/ballTracking/assets/125929174/57457367-89e9-4559-89e3-f6f84e3c0057)
 
-Cette fois : distance 4 pour 1, 0.1° de résolution angulaire :
+
+
+
+Cette fois : distance 4 pour 1, 0.1° de résolution angulaire : Temps d'exécution : 2.8 secondes
 ![plan hough reperage max](https://github.com/hacktivist25/ballTracking/assets/125929174/abf96d39-29aa-4e34-9c9f-fe83391898e9)
 ![droite reconnue](https://github.com/hacktivist25/ballTracking/assets/125929174/d6f479f2-f502-495a-932a-5499355673af)
 ![rendu](https://github.com/hacktivist25/ballTracking/assets/125929174/c39291bd-f4bf-42b2-b30d-efc9aacf663b)
 
-puis 4 pour 1 en distance, 1° en résolution angulaire :
+
+
+
+puis 4 pour 1 en distance, 1° en résolution angulaire : Temps d'exécution : 0.67 secondes
 ![plan de hough avec reperage du max](https://github.com/hacktivist25/ballTracking/assets/125929174/ff90890d-186d-4668-a735-19fd0c0504c8)
 ![droite trouvee](https://github.com/hacktivist25/ballTracking/assets/125929174/2b132c6e-0ece-405e-ae71-e7fe169b12e0)
 ![rendu](https://github.com/hacktivist25/ballTracking/assets/125929174/e37097dd-0618-4c10-994e-d0e6efec54b2)
+
+
+Malgré que les coefficients semblent un peu éloignés de ceux que l'on doivent trouver en ligne24, la précision à l'oeil reste satisfaisante : bien évidemment, le traitement avec un pas de rotation de 0.1° lors de la transformaée onduit à des résultats plus précis, mais qui prennent bine pus de temps
+
 
 
 Cela marche pour deux droites sous certaines conditions :
