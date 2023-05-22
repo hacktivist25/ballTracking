@@ -140,19 +140,51 @@ Cela donne donc ceci :
 
 On trouve bien deux maximas éloignés l'un de l'autre : reste à effectuer les transformations habituelles et dessiner les droites trouvées sur l'image brute pour voir si les coefficients sont bons : on obtient alors ceci
 ![droites](https://github.com/hacktivist25/ballTracking/assets/125929174/8bed9042-a510-4381-922e-a9b10ba04093)
+![equaDroites](https://github.com/hacktivist25/ballTracking/assets/125929174/52d347fa-9c94-4f99-ac3d-c998f83ea64c)
+
+
 
 Les droites collent bien au repère
 
 
 Maintenant on peut se lancer sur la transformée de Hough pour trouver un cercle de rayon inconnu :
-Le principe est le même [6]
+Le principe est le même [6],[7]
 Sauf que l'on peut garde le plan x,y : plus besoin de faire des transformées en (rho, theta)
 
 On commence déjà par l'aver l'ancienne image des droites que l'on a trouvé pour ne pas perturber le futur processus de détection de cercle : on otient alors ceci :
+![cannySansLignes](https://github.com/hacktivist25/ballTracking/assets/125929174/3dfaed0c-693a-4603-b84b-e8b4ca1beb65)
+
+On s'est débarassé des deux lignes du repère :
+En principe, les points blancs que l'on voit sont dû aux ombres de l'image initialse : mais ils ressembelent  un bruit poivre et sel, on pourrait donc en principe les traiter en convoluant l'image avec un filtre moyenneur ou Gaussien, snas que le flou apporté par le proessus ne soit excessivement gênant pour la détextion de cercle... Mais comme une opération si simpl en python mange du temps processeur, nous ne le ferons pas.
+
+![Capture d’écran 2023-05-22 141347](https://github.com/hacktivist25/ballTracking/assets/125929174/118f588b-2ded-4cd1-9eb8-3f5a8f097163)
+
+On garde le repère cartésien standard, et pour chaque point d'intérêt/de contour, on dessine un cercle autour de ce point
+On le fait pour des rayons de cercle de plus en plus grand
+On sauvegarde tout cela dnas une grosse matrice accumulatrice en trois dimension : la même dimension que l'image, dupliquée auta nt de fois qu'il y a de rayons possibles détectables, en fonction de la précision que l'on souhaite y apporter
+On remarque alors que si les cercles que l'on dessine autour des points d'intérêt ont le même rayon que le cercle préssuposé où ces points se situent, ils s'intersectent au centre du cercle présupposé.
+Ainsi, ce popint aura un très grand nombre de vote et sera le maximum de la matrice accumulatrice : on a alors ses coordonnées en fonction de sa position dans la matrice, et son rayon en fonction de la première dimension de la matrice accumulatrice : 
+La matrice est de taille N,X,Y avec X et Y les dimensions en pixels de l'image (3280 par 1845, et N dépend de la présision/le pas entre les rayons des cercles que l'on dessine
+
+Au lieu de tracer un cercle complet, on optimise par un calcul de gradient : 
+Pour chaque point d'intérêt, au lieu de tracer un cercle complet, on calcule le gradient de ce point d'intérêt sur l'image noir et blanc du dessus : le gradient nous donnera alors les directions dans lesquelles tracer des arcs de cercle : on prend juste deux noyaux Gx et Gy donnant le gradient en x et en Y, et on obtient l'angle absolu par la norme euclidienne des deux vecteurs, et on trace des arcs de cercle e direction de cet angle, et à l'opposé, sur une amplitude de 45° au vu de la précision de l'angle obtenu par cette méthode : on trace ainsi seulement un quart de cercle pour chaque points plutôt qu'un cercle complet
+
+si on essaye maintenant de détecter le cercle, voilà ce que cela donne, avec un pas de 5 pixels pour le rayon, et en traçant 128 points de chaque cercles (ceux que l'on trace pour chaque points d'intérêts
+
+![gough cercle](https://github.com/hacktivist25/ballTracking/assets/125929174/bf156d16-3d50-43de-9b7d-1f515b168234)
+ ()
+Voilà le plan pour lequel on aurait un maximum : il se situe au42èpme plan de notre matrice accumulatrice, et les coordonnées du maximum sur ce plan sont (1392, 952) : ce sont les coordonnées de son centre, qu'on note aCentre et bCentre
+Le 42ème plan représent un rayon de 260 pixels, puisque l'on commence nos recherches à partir d'un cercle de rayon 50 pixels : 42*5 + 50 = 260
+Et voilà le cercle trouvé, avec ses coordonnées aCentre, bCentre, et son rayon, trouvé juste avant :
+
+![finalite](https://github.com/hacktivist25/ballTracking/assets/125929174/5bb32c74-d685-4b8b-a4e3-d74c5479794f)
+![infos final](https://github.com/hacktivist25/ballTracking/assets/125929174/90034c36-5040-49e6-bfd1-aa24a1b4cd76)
+
+Cela colle parfaitement avec la balle que l'on voit sur le plan :
 
 
-
-
+Reste à convertir ces coordonnées pixel en coordonnées réelles : 
+C'est là qu'entre en jeu notre capteur de distance et notre centrale inertielle, ainsi que d'autres specs de notre caméra.
 
 
 
@@ -175,4 +207,5 @@ On commence déjà par l'aver l'ancienne image des droites que l'on a trouvé po
 [3] https://sbme-tutorials.github.io/2021/cv/notes/4_week4.html
 [4] https://www.raspberrypi.com/documentation/accessories/camera.html
 [5] https://indiantechwarrior.com/canny-edge-detection-for-image-processing/
-[6]
+[6] https://arxiv.org/ftp/arxiv/papers/1405/1405.7242.pdf
+[7] https://en.wikipedia.org/wiki/Circle_Hough_Transform
