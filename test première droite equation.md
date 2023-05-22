@@ -2,10 +2,11 @@ On ouvre la photo LIGNE_NB sur paint pour avoir ses coordonnées en pixel, et on
 Le but est de connaître le résultat pour voir si l'algorithme ne fait pas n'importe quoi
 
 
-===============================================
+
+
 NOTE IMPORTANTE :
-Le repère : x vers la droite, y vers le bas, les repères d'images sur python et image sont les mêmes
-===============================================
+Le repère : x vers la droite, y vers le bas, les repères d'images sur python et image sont les mêmes : l'origine se situe tout en haut à gauche de l'image
+
 ![ligne](https://github.com/hacktivist25/ballTracking/assets/125929174/8ee5481b-38cc-4e5d-a863-20aced7b4acb)
 pixels des extrémités :
 - Un pixel en   (1036 ; 896)
@@ -23,6 +24,53 @@ b=y2-ax2
 l'équation doit être 0.0239x + 871.2 dans le repère de l'image
 ----------------------------------------------------------------
 on va voir ce que renvoie l'algorithme que l'on a élaboré pour différentes résolutions angulaires et de distance : 
+
+
+
+
+
+Fonctionnement de la transformée de Hough : [1]
+Au lieu de rester dnas un repère cartésien standard qui poserait des soucis de calculs pour le coefficient directeur d'une droite quasiment verticale, et qui nécessiterai une mémoire trop grande, on passe dans un autre repère qui s'affranchi de ces contraintes 
+
+![représentation](https://github.com/hacktivist25/ballTracking/assets/125929174/9996d755-cf6f-4159-a651-5bf480d9f6ee)
+
+Le repère de hough possède en abscisse et en ordonnées non pas x et y, mais thetoa et rho
+On voit que theta est l'angle que forme se segment perpendiculaire à la droite reliant deux points, et passant pas l'origine, avec l'axe des abscisses de l'image (x), et rho représente la longueur du segment précédent
+Ces valeurs seront reportées sur ce que l'on appelle plan de Hough
+
+On obtient un plan de hough en apppliquant l'algorithme suivant :
+Pour chaque point d'intérêt (qui est un point de contour, trouvé par un filtrage de canny) :
+     Fare passer des droites par ce point, dans toutes les directions (faire varier theta de 0 à 180°
+     Calculer le rho correspondant à chaque fois, à l'aide de la formule de changement de repère [2] :
+
+![equa de base](https://github.com/hacktivist25/ballTracking/assets/125929174/ba059c49-816b-48e6-bb4e-31d5baab5d81)
+     Placer le point (theta, rho) sur le plan
+ 
+ Une fois cela fait, le plan de hough devrai ressembler à quelque chose comme cela :
+ ![plan Hough](https://github.com/hacktivist25/ballTracking/assets/125929174/e1ef9c5d-9ce2-44f3-a5ce-d1d6e487ed46)
+ Le point le plus blanc, c'est à dire celui sur lequel beaucoup de droites passe, est un maximum, et est l'endroit sur le plan de hough où il est probable qu'il y aie une droite sur le plan cartésien
+ On récupère alors les coordonnées de ce point maximal, et on est capable d'en donner l'équation dans le plan cartésien avec la transformée inverse [2]:
+ 
+ ![equa inverse](https://github.com/hacktivist25/ballTracking/assets/125929174/0512534d-becd-4da3-9f03-67bd13e69422)
+
+ De là, on obtient notre équation, avec des coefficients en pixels, pour notre plan d'image : on s'occupera de la conversion en distance réalle plus tard
+
+
+
+Pour faire tout cela, il faut tout d'abord détecter les contours : On utilise pour cela le filtre de Canny :
+On prend d'abord une photo avec l'appareil photo de la caméra RaspberryPi Model4B dont voici quelques specs : [4] Nous avons un model v2 : deuxième colonne
+
+![Picamera Module V2](https://github.com/hacktivist25/ballTracking/assets/125929174/86944bda-2170-4753-8654-5de31a99d428)
+
+On retiendra pour le moment qu'elle prend des photos de résolution 3280 px / 1845 px
+Les photos sont en format RGB
+On commence par binariser le format pour avoir une image en niveaux de gris (grayscaling)
+Ensuite, la détextion de bords se fait en recherchant les gradients de l'image : UN gradient renvoie une valeur vectorielle qui point vers la direction de l'image à partir d'un point telle que la variation de niveau de gris soit la plus forte dans la direction : voilà ce qu'est un gradient, et il permet en effet de détecter les bords, car les bords desobjets marquent une transition brutale avec un autre objet, un fond... [5]
+Nous utilisons une fonction toute faite dnas la bibliothèque openCV
+
+
+Voyons ce que cela donne pour le moment :
+
 Tout d'abord, l'image de base déjà montrée au dessus est soumis à l'algorithme.
 L'algorithme la transforme en noir et blanc et prend les contours avec un seuillage automatique sur un filtre de canny :
 
@@ -76,3 +124,24 @@ Maintenant on peut se lancer sur la transformée de Hough pour trouver un cercle
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1] https://towardsdatascience.com/lines-detection-with-hough-transform-84020b3b1549
+[2] https://homepages.inf.ed.ac.uk/rbf/HIPR2/hough.htm
+[3] https://sbme-tutorials.github.io/2021/cv/notes/4_week4.html
+[4] https://www.raspberrypi.com/documentation/accessories/camera.html
+[5] https://indiantechwarrior.com/canny-edge-detection-for-image-processing/
