@@ -51,6 +51,7 @@ Pour chaque point d'intérêt (qui est un point de contour, trouvé par un filtr
    
    
  Une fois cela fait, le plan de hough devrait ressembler à quelque chose comme cela :
+ 
  ![plan Hough](https://github.com/hacktivist25/ballTracking/assets/125929174/e1ef9c5d-9ce2-44f3-a5ce-d1d6e487ed46)
  
  Le point le plus blanc, c'est à dire celui sur lequel beaucoup de droites passent/pour lequel beaucoup de points ont cette coordonnée en commun, est un maximum, et est l'endroit sur le plan de hough où il est probable qu'il y aie une droite sur le plan cartésien
@@ -186,13 +187,30 @@ Cela colle parfaitement avec la balle que l'on voit sur le plan :
 Reste à convertir ces coordonnées pixel en coordonnées réelles : 
 C'est là qu'entre en jeu notre capteur de distance et notre centrale inertielle, ainsi que d'autres specs de notre caméra.
 
+Intéressons nous d'abord aux deux capteurs que nous utiliserons :
+Le capteur de distance : VL53L0X de chez STMicroElectronics : son GitHub pour l'installation de la  bibliothèque, les commandes... [9]
+Sa fiche technique [9]
+
+![SDA and SCL](https://github.com/hacktivist25/ballTracking/assets/125929174/11ce09d5-9ec8-474c-97ef-f584c039231b)
+![tech specs](https://github.com/hacktivist25/ballTracking/assets/125929174/dee71896-b7ca-4d05-a8e8-fc87ef06d9c0)
+![specs](https://github.com/hacktivist25/ballTracking/assets/125929174/2d262447-3f35-463d-b301-8e09cad7fa69)
+
+On retiens qu'il fonctionne via un protocole I2C, son adresse est 0x22 (on a reprogrammé l'adresse)
+L'horloge qui cadence l'envoie de données de l'esclave (le capteur) jusqu'au maître (la carte raspberryPi Model4B) va jusqu'à 400kHz
+Il fonctionne en 3.3 Volts
 
 
+L'accéléromètre, partie de l'IMU MP9250 : sa fiche technique : [10] et son gitHub [11]
+![accelerometre IMU 10D0F specs](https://github.com/hacktivist25/ballTracking/assets/125929174/d9f4674f-28d1-4f4c-b2f5-531bdb94ae19)
+![specs](https://github.com/hacktivist25/ballTracking/assets/125929174/f3e2d720-278b-4b61-93ae-3c1bc23ba97d)
+![table](https://github.com/hacktivist25/ballTracking/assets/125929174/e910169f-0717-43eb-96e2-199f184d4d01)
 
+idem, fonctionne par protocole I2C, son adresse est 0x68, fonctionne avec une horloge SCL jusqu'à 400kHz (quelle aubaine)
+il onctionne en 5 Volts
 
-
-
-
+Enfin, on regarde la fiche technique du raspberry pour voir comment faire les branchements : [12]
+![GPIO4 Raspberrypi du site officiel](https://github.com/hacktivist25/ballTracking/assets/125929174/47281e75-ef10-4480-8c80-abbc5defbb07)
+![Capture d’écran 2023-05-14 214212](https://github.com/hacktivist25/ballTracking/assets/125929174/762610f5-6a39-42b5-a472-497b73d1e0f9)
 
 
 
@@ -209,3 +227,8 @@ C'est là qu'entre en jeu notre capteur de distance et notre centrale inertielle
 [5] https://indiantechwarrior.com/canny-edge-detection-for-image-processing/
 [6] https://arxiv.org/ftp/arxiv/papers/1405/1405.7242.pdf
 [7] https://en.wikipedia.org/wiki/Circle_Hough_Transform
+[8] https://github.com/Gadgetoid/VL53L0X-python
+[9] https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwiTkOKj_oj_AhWMUKQEHfo5DT0QFnoECA0QAQ&url=https%3A%2F%2Fwww.st.com%2Fresource%2Fen%2Fdatasheet%2Fvl53l0x.pdf&usg=AOvVaw2D772P0Ms66VJ7lbKKynB-
+[10] https://invensense.tdk.com/wp-content/uploads/2015/02/PS-MPU-9250A-01-v1.1.pdf
+[11] https://github.com/FaBoPlatform/FaBo9AXIS-MPU9250-Python
+[12] https://pinout.xyz/pinout/pin7_gpio4#
