@@ -201,19 +201,24 @@ Il fonctionne en 3.3 Volts
 
 
 L'accéléromètre, partie de l'IMU MP9250 : sa fiche technique : [10] et son gitHub [11]
+
 ![accelerometre IMU 10D0F specs](https://github.com/hacktivist25/ballTracking/assets/125929174/d9f4674f-28d1-4f4c-b2f5-531bdb94ae19)
 ![specs](https://github.com/hacktivist25/ballTracking/assets/125929174/f3e2d720-278b-4b61-93ae-3c1bc23ba97d)
 ![table](https://github.com/hacktivist25/ballTracking/assets/125929174/e910169f-0717-43eb-96e2-199f184d4d01)
 
 idem, fonctionne par protocole I2C, son adresse est 0x68, fonctionne avec une horloge SCL jusqu'à 400kHz (quelle aubaine)
-il onctionne en 5 Volts
+il fonctionne en 5 Volts
 
 Enfin, on regarde la fiche technique du raspberry pour voir comment faire les branchements : [12]
 ![GPIO4 Raspberrypi du site officiel](https://github.com/hacktivist25/ballTracking/assets/125929174/47281e75-ef10-4480-8c80-abbc5defbb07)
 ![Capture d’écran 2023-05-14 214212](https://github.com/hacktivist25/ballTracking/assets/125929174/762610f5-6a39-42b5-a472-497b73d1e0f9)
 
 
+on obtient le schéma de branchements suivant :
 
+[sch.pdf](https://github.com/hacktivist25/ballTracking/files/11566803/sch.pdf)
+
+et on peut les faire fonctionner correctement.
 
 
 
