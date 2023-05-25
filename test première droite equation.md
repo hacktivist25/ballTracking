@@ -218,10 +218,31 @@ on obtient le schéma de branchements suivant :
 
 [sch.pdf](https://github.com/hacktivist25/ballTracking/files/11566803/sch.pdf)
 
-et on peut les faire fonctionner correctement.
+et on peut les faire fonctionner correctement avc les fonctions caputreAngle et captureDistance à la toute fin du code balltracking.py :
+captureDistancene fait que lire la distance du capteure VL53L0X
+captureAngle ne fait que lire les valeurs des accéléromètres selon les 3 axes de l'IMU, et en déduit le pitch avec la formule : pitch = 180 * m.atan (accelerationX/m.sqrt(accelerationY*accelerationY + accelerationZ*accelerationZ))/m.pi; 
 
+![Pitch](https://github.com/hacktivist25/ballTracking/assets/125929174/888faa6a-9bc1-4cd6-8dfd-e1b3a295954a)
 
+Le but va être d'avoir un pitch de -90° pour que la caméra pointe parfaitement vers le dessous pour simplifier les calculs : on ne prend pas n compte la distorsion caméra, au vu de cette photo 
 
+![calibrageBas](https://github.com/hacktivist25/ballTracking/assets/125929174/58143319-4f67-47ce-ba93-a6934d192753)
+
+ON pourra déduire ainsi les coordonnées de la balle par rapport au centre optique de la caméra/le centre de l'image, en distance réelles, juste en connaissant la distance entre la caméra et le centre de l'image, et le champ angulaire de la caméra, donné par les specs de la caméra raspberrypi camera model v2 :
+
+![CamScanner 05-25-2023 18 01 (1)_1](https://github.com/hacktivist25/ballTracking/assets/125929174/7ef9f7fa-08ca-4bcd-b80a-5f5f3b38174b)
+
+![CamScanner 05-25-2023 18 01 (1)_2](https://github.com/hacktivist25/ballTracking/assets/125929174/e1c332d5-da35-43c1-959d-83f4aad1e003)
+
+Les points équidistants en pixels sur une image correspondent à des points de l'obet réel à égal pas angulaire par rapport à la caméra
+Ainsi en négligeant dnas un premier temps les distorsions de l'image, on arrive à avoi les coordonnées assez exactes du centre d'une balle par rapprot au centre d'une image : le reste n'est qu'affaire de changement de repère : il suffit de trouver l'intersection ded deux droites du repère dessiné sur l'image grpâce à leur deux équations :
+On a d1 : y = a1x + b1
+et d2 : y = a2x + b2
+
+on pose alors (a1-a2)x + (b1-b2) = 0
+d'où x = (b2-b1)/(a1-a2)
+et on en déduit l'ordonnée d'intersetion :
+Des deux équations, on déduit deux vecteurs directeurs, et il n'y a plus qu'à faire des changements de repère en usant le module vector de python (pas encore fait : de toute façon, le projet sera transposé ultérieurement en C pour attendre les objectifs de temps réel)
 
 
 
