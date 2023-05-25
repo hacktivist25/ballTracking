@@ -244,8 +244,15 @@ d'où x = (b2-b1)/(a1-a2)
 et on en déduit l'ordonnée d'intersetion :
 Des deux équations, on déduit deux vecteurs directeurs, et il n'y a plus qu'à faire des changements de repère en usant le module vector de python (pas encore fait : de toute façon, le projet sera transposé ultérieurement en C pour attendre les objectifs de temps réel)
 
-Avec tout ce qui a été dit juste avant, on peut faire un test : 
+Avec tout ce qui a été dit juste avant, on peut donc comprendre les mesures données juste en dessous de l'image avec la balle, le cercle, et le centre optique :
 
+![zoom](https://github.com/hacktivist25/ballTracking/assets/125929174/4a1f1466-2308-4502-aae6-600488680623)
+
+![infos final](https://github.com/hacktivist25/ballTracking/assets/125929174/bfcce158-0185-49e4-aac2-d89d57a5d077)
+
+On a 1,7xm pour l'axe x, alors que la balle a un rayon de 1,5cm
+Et on a 0,4 cm de décalage en y avec le centre de l'image
+C'est donc "relativement" précis.
 
 [1] https://towardsdatascience.com/lines-detection-with-hough-transform-84020b3b1549
 [2] https://homepages.inf.ed.ac.uk/rbf/HIPR2/hough.htm
