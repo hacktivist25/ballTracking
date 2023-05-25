@@ -244,6 +244,7 @@ d'où x = (b2-b1)/(a1-a2)
 et on en déduit l'ordonnée d'intersetion :
 Des deux équations, on déduit deux vecteurs directeurs, et il n'y a plus qu'à faire des changements de repère en usant le module vector de python (pas encore fait : de toute façon, le projet sera transposé ultérieurement en C pour attendre les objectifs de temps réel)
 
+Avec tout ce qui a été dit juste avant, on peut faire un test : 
 
 
 [1] https://towardsdatascience.com/lines-detection-with-hough-transform-84020b3b1549
