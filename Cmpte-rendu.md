@@ -256,7 +256,7 @@ On pourra déduire ainsi les coordonnées de la balle par rapport au centre opti
 ![CamScanner 05-25-2023 18 01 (1)_2](https://github.com/hacktivist25/ballTracking/assets/125929174/e1c332d5-da35-43c1-959d-83f4aad1e003)
 
 Les points équidistants en pixels sur une image correspondent à des points de l'objet réel à égal pas angulaire par rapport à la caméra
-Ainsi en négligeant dans un premier temps les distorsions de l'image, on arrive à avoir les coordonnées assez exactes du centre d'une balle par rapprot au centre d'une image : le reste n'est qu'affaire de changement de repère : il suffit de trouver l'intersection ded deux droites du repère dessiné sur l'image grâce à leur deux équations :
+Ainsi en négligeant dans un premier temps les distorsions de l'image, on arrive à avoir les coordonnées assez exactes du centre d'une balle par rapport au centre d'une image : le reste n'est qu'affaire de changement de repère : il suffit de trouver l'intersection ded deux droites du repère dessiné sur l'image grâce à leur deux équations :
 On a d1 : y = a1x + b1
 et d2 : y = a2x + b2
 
@@ -285,7 +285,7 @@ On obtient ceci lorsque rien n'est connecté.
 Et on verra 0x66 et 0x22 lorsque kes deux modules sont connectés (il ne faut pas oublier d'autoriser l'interface I2C dans les configurations du raspberry)
 
 Les valeurs apportées par les capteurs sont cohérentes : on leur faisant donner une trentaine de valeurs par seconde, on constate que la valeur de l'angle calculé ainsi que celle de la distance à un objet fonctionne parfaitement
-Il aurait été bienvenu d'analyser si la commmunication se faisait bien à la fréqence par défaut des appareils, constater la trame envoyée par le maître raspberry demandant des mesures aux capteurs, et ceux-ci répondant.
+Il aurait été bienvenu d'analyser si la communication se faisait bien à la fréquence par défaut des appareils, constater la trame envoyée par le maître raspberry demandant des mesures aux capteurs, et ceux-ci répondant.
 
 Le protocole I2C : [13]
 
@@ -298,8 +298,8 @@ Les bits de données SDA ne sont lus que lorsque l'horloge SCL est à l'état Ha
 
 ![image](https://github.com/hacktivist25/ballTracking/assets/125929174/e60c94b7-ec5c-4811-b81c-71dc9fe9570a)
 
-Il aurait été bienvenu de voir ces valeurs électiques de transmission si on avait mieux géré notre temps... il a été très majoritairement déployé à optimiser notre algorithme de hough : l'exécution du code n'est pas médiocre, il est même ce que l'on peut faire de mieux avec la précision souhaitée.
-Nos horloges ont une cadence maximale de 400khz pour nos deux capteurs, ils fonctionennt donc en fast mode au mieux, mais la clock rate par défaut sur la grande majorité ds appareils est 100khz
+Il aurait été bienvenu de voir ces valeurs électriques de transmission si on avait mieux géré notre temps... il a été très majoritairement déployé à optimiser notre algorithme de hough : l'exécution du code n'est pas médiocre, il est même ce que l'on peut faire de mieux avec la précision souhaitée.
+Nos horloges ont une cadence maximale de 400khz pour nos deux capteurs, ils fonctionnent donc en fast mode au mieux, mais la clock rate par défaut sur la grande majorité des appareils est 100khz
 Notre IMU n'a pas le choix, elle est à 400kHz : 
 
 ![I2C Specs](https://github.com/hacktivist25/ballTracking/assets/125929174/d84a7612-01fe-4e97-bc2c-05385b3fb89f)
@@ -312,12 +312,12 @@ Cela aurait dû donner lieu à ce genre de trames si nous avions pu les observer
 
 ![oscill](https://github.com/hacktivist25/ballTracking/assets/125929174/5ad12df7-73b9-4b98-b7d5-694b829319fb)
 
-La maitre annonce un bit de start et donne l'adresse de l'eclave (il existe des adresses de broadcast) : l'eclave considéré répond par un bit d'aquittement ACKnowledge) ou non aquittement NACK
-Si aquittement, le maître envoie une commande et l'esclave envoie un ACK
-Ensuite les rôles s'inversent : l'eslave envoie la donnée, le maitre envoie ACK, octets par octets : le dernier est un NACK, correspondant à un bit de stop : la communication prend alors fin
+Le maître annonce un bit de start et donne l'adresse de l'esclave (il existe des adresses de broadcast) : l'esclave considéré répond par un bit d'acquittement ACKnowledge) ou non acquittement NACK
+Si acquittement, le maître envoie une commande et l'esclave envoie un ACK
+Ensuite les rôles s'inversent : l'esclave envoie la donnée, le maitre envoie ACK, octets par octets : le dernier est un NACK, correspondant à un bit de stop : la communication prend alors fin
 
-Puisque les deux capteurs utilisent le même canal SCL, les horloges doivent évidemment êtres synchronisées entre les deux appareils esclaves !
-Sans que nous n'ayont rien eu à faire, les horloges étaient déjà synchronisées, c'est ce qu'il nous semble : l'envoi de données en continu (30 valeurs par secondes) de la part des deux appareils pendant 1 minute n'a donné lieu à aucune erreur ni aucune valeur incohérente malgré que nous manipulions les capteurs en même temps pour en changer l'angle/la distance)
+Puisque les deux capteurs utilisent le même canal SCL, les horloges doivent évidemment être synchronisées entre les deux appareils esclaves !
+Sans que nous n'ayons rien eu à faire, les horloges étaient déjà synchronisées, c'est ce qu'il nous semble : l'envoi de données en continu (30 valeurs par secondes) de la part des deux appareils pendant 1 minute n'a donné lieu à aucune erreur ni aucune valeur incohérente malgré que nous manipulions les capteurs en même temps pour en changer l'angle/la distance)
 
 [1] https://towardsdatascience.com/lines-detection-with-hough-transform-84020b3b1549
 [2] https://homepages.inf.ed.ac.uk/rbf/HIPR2/hough.htm
