@@ -15,64 +15,16 @@ import math as m
 import cv2
 #import cv2 as cv
 
-#ouverture d'une image
-#im=img.open("LIGNE_NB.jpg")
-#il faudra ouvrir l'image de départ départ pour faire la mini démo
 
-#sauvegarde : im.save(nom)
-
-#diplay image
-#im.show()
-#plt.imshow(im)
-
-#afficher un pixel de coordonnées x,y
-#im.getpixel((200,350))
-
-#le moyen unterne de conversion en noir et blanc
- #im2=im.convert("1")
-
-#le moyen de modifier un pixel
- # im.putpixel((x,y),(R,G,B))
-
-
-def capture(name,x=3280, y=1845):
+def capture(name,x=3280, y=1845): #accède à la caméra, prend une capture et la sauvegarde sous le nom "name" : le "name doit inclure le formar .png ou jpg
     camera = picamera.PiCamera()
     camera.resolution = (x,y)
     camera.capture(name)
     imBrute = img.open(name)
     return (imBrute)
 
-def determinist(imIntermediaire):
-    tab=[(0) for k in range(256)]
-    for x in range(int(imIntermediaire.width/4)):
-        for y in range(int(imIntermediaire.height/4)):
-            tab[imIntermediaire.getpixel((4*x,4*y))]+=1
-    maxi=max(tab)
-    for k in range(len(tab)):
-        tab[k]/=maxi
-    plt.plot([(k) for k in range (256)],tab)
-    plt.show()
-    q=0
-    threshold=0
-    while(q<0.09):
-        q+=tab[threshold]
-        threshold+=1
-    print("threshold trouvé : ", threshold)
-    return threshold
+def traitementImageCanny(imBrute): #application du filtre de canny : Binarisation de l'image, application d'un filtre gradient pour détection de contours
 
-def traitementImage(imBrute): #conversion d'une image de format RGB en format N&B avec effaçage du petit bruit, empirique
-    imIntermediaire=imBrute.convert("L")
-    threshold=determinist(imIntermediaire)
-    #threshold=90 est l'idéal pour l'image de base
-#     imIntermediaire.show()
-    imTraitee=imIntermediaire.point(lambda p:255 if p > threshold else 0)
-    imTraitee.show()
-    imTraitee=imTraitee.convert("1")
-    imTraitee.show()
-    return (imTraitee)
-#on récupère une imTraitee
-
-def traitementImageCanny(imBrute):
     imTraitement = cv2.imread(imBrute.filename)  # Read image
 
     #Setting parameter values
@@ -86,9 +38,9 @@ def traitementImageCanny(imBrute):
     return (imTraitee)
 
 
-def constructionMatriceAccumulatrice(imTraitee,resolutionAngulaire = 1, resolutionDistance=1):
+def constructionMatriceAccumulatrice(imTraitee,resolutionAngulaire = 1, resolutionDistance=1): #construction de la matrice accumulatrice pour la détection de droite
     theta = [k for k in range(0,int(180/resolutionAngulaire),1)]
-    distanceMax=int((((3280/resolutionDistance)**2)+((1845/resolutionDistance)**2))**(1/2))+1 #diagonale maximale
+    distanceMax=int((((3280/resolutionDistance)**2)+((1845/resolutionDistance)**2))**(1/2))+1 #longueur maximale de rho dnas le plan de hough, conditionné par la diagonale
     matriceAccumulatrice = np.zeros((int(180/resolutionAngulaire),distanceMax)) #matrice qui permettra le dessin du plan de hough
     coord= []
     for x in range(int(3280/resolutionDistance)) :
@@ -210,10 +162,6 @@ def Horizon(imageBrute,resolutionAngulaire,resolutionDistance, nbligne):
     stockEquation=reconstructionDroite(constructionMatriceAccumulatrice(traitementImageCanny(imageBrute),resolutionAngulaire,resolutionDistance),imageBrute,resolutionAngulaire,resolutionDistance, nbligne)
     return stockEquation
 
-
-
-#Horizon(img.open("ligne.jpg"),1,4,1)
-
 ### cercle dont on connait le rayon
 
 def coordCercleRayonEstime(a,b,rayonEstime,matrice,resolutionDistance, resolutionAngulaireCercleInter):#a et b coordonnnées réelles de son centre en pixels, resol détermine le nombre de points du cercle
@@ -310,11 +258,6 @@ def reconstructionCercle(matriceAccumulatriceCercleConnu,imBrute,rayonEstime,res
 def reconnaissanceCercleRayonConnu(imageBrute,rayonEstime,resolutionAngulaire,resolutionDistance,resolutionAngulaireCercleInter):
     reconstructionCercle(constructionMatriceAccumulatriceCercleConnu(traitementImageCanny(imageBrute), rayonEstime,resolutionAngulaire,resolutionDistance,resolutionAngulaireCercleInter),imageBrute, rayonEstime,resolutionAngulaire,resolutionDistance,resolutionAngulaireCercleInter)
 
-#reconnaissanceCercleRayonConnu(img.open("cercle.jpg"),494,1,1,32)
-
-#sur cerlce.pnj : centre : 1737,1014
-#rayon : 1523-535/2 and 2228-1242/2 DONNANT (494 ET 496) : GG A TOUS !
-
 
 ###Cercle de rayon inconnu
 
@@ -392,8 +335,6 @@ def constructionMatriceAccumulatriceCercleInconnu(imTraitee,pasDeRayon=10, rayon
     plt.show()
     return matriceAccumulatriceCercleInconnu
 
-#reconnaissanceCercleRayonInconnu(img.open("cercle.jpg"),20,50,1,1,128)
-
 def reconstructionCercleInconnu(matriceAccumulatriceCercleInconnu,imBrute,pasDeRayon=10,rayonMini=25,resolutionAngulaire=1,resolutionDistance=1,resolutionAngulaireCercleInter=32):
     #recherche du max
     max_index = np.unravel_index(matriceAccumulatriceCercleInconnu.argmax(), matriceAccumulatriceCercleInconnu.shape) #trouve l'index d'un max de la matrice
@@ -405,15 +346,6 @@ def reconstructionCercleInconnu(matriceAccumulatriceCercleInconnu,imBrute,pasDeR
         listMax.append(np.unravel_index(matriceAccumulatriceCercleInconnu.argmax(), matriceAccumulatriceCercleInconnu.shape))
         matriceAccumulatriceCercleInconnu[np.unravel_index(matriceAccumulatriceCercleInconnu.argmax(), matriceAccumulatriceCercleInconnu.shape)]=0
     print("longueur liste des maxima : ", len(listMax), "      coordonnées : ", listMax)
-    #AAA=img.fromarray(matriceAccumulatriceCercleInconnu)
-    #coloriage des max
-    #for z in listMax:
-    #    y=z[0]
-    #    x=z[1]
-    #    for i in range(-2,3):
-    #        for j in range(-2,3):
-    #            AAA.putpixel((x+i,y+j),210)
-    #AAA.show()
 
     bCentre=listMax[0][1]*resolutionDistance
     aCentre=listMax[0][2]*resolutionDistance
@@ -425,7 +357,6 @@ def reconstructionCercleInconnu(matriceAccumulatriceCercleInconnu,imBrute,pasDeR
     for i in range(-3,4):
         for j in range(-3,4):
             imBrute.putpixel((int(aCentre)+i,int(bCentre)+j),180)
-    #imBrute.show()
 
 
     print("aCentre=",aCentre,"   bCentre =",bCentre,"   rayon =",rayon)
@@ -464,8 +395,6 @@ def reconstructionCercleInconnu(matriceAccumulatriceCercleInconnu,imBrute,pasDeR
 def reconnaissanceCercleRayonInconnu(imageBrute,pasDeRayon,rayonMini,resolutionAngulaire,resolutionDistance,resolutionAngulaireCercleInter):
     reconstructionCercleInconnu(constructionMatriceAccumulatriceCercleInconnu(traitementImageCannyGradient(imageBrute), pasDeRayon,rayonMini,resolutionAngulaire,resolutionDistance,resolutionAngulaireCercleInter),imageBrute, pasDeRayon,rayonMini,resolutionAngulaire,resolutionDistance,resolutionAngulaireCercleInter)
 
-#reconnaissanceCercleRayonInconnu(img.open("cercle.jpg"),20,50,4,4,128)
-#circles = cv2.HoughCircles(traitementImageCannyGradient(img.open("cercle.jpg")), cv2.HOUGH_GRADIENT, 1.2,100)
 
 def MatriceDistances (distance, angle=0, FOVX=62, FOVY=49, resol=20):
     matriceDist=np.zeros((2,int(1845/resol)+1,int(3280/resol) +1))
@@ -489,7 +418,7 @@ def MatriceDistances (distance, angle=0, FOVX=62, FOVY=49, resol=20):
 
 
 
-def total(imBrute,pasDeRayon,rayonMini,resolutionAngulaire,resolutionDistance,resolutionAngulaireCercleInter, nblignes):
+def total(imBrute,pasDeRayon,rayonMini,resolutionAngulaire,resolutionDistance,resolutionAngulaireCercleInter, nblignes): #combine la détection de lignes et de cercle
 
     stockEquation=Horizon(imBrute,resolutionAngulaire,resolutionDistance,nblignes)
     [imBrute,aCentre,bCentre]=reconstructionCercleInconnu(constructionMatriceAccumulatriceCercleInconnu(traitementImageCannyGradient(imBrute, stockEquation), pasDeRayon,rayonMini,resolutionAngulaire,resolutionDistance,resolutionAngulaireCercleInter),imBrute, pasDeRayon,rayonMini,resolutionAngulaire,resolutionDistance,resolutionAngulaireCercleInter)
@@ -498,7 +427,7 @@ def total(imBrute,pasDeRayon,rayonMini,resolutionAngulaire,resolutionDistance,re
     print("coordonnées par rapport au centre de l image (centre optique) : ", A[0][round(bCentre/20)][round(aCentre/20)], A[1][round(bCentre/20)][round(aCentre/20)])
 #total(img.open("blablabla.jpg"),5,50,1,4,128,2)
 
-def totalCam(nom,pasDeRayon,rayonMini,resolutionAngulaire,resolutionDistance,resolutionAngulaireCercleInter, nblignes):
+def totalCam(nom,pasDeRayon,rayonMini,resolutionAngulaire,resolutionDistance,resolutionAngulaireCercleInter, nblignes): #combine la prise de photo via caméra, l'utilisation des capteurs, et la détection de lignes et de cercle
     [imBrute,distance,angleHorizontal]=captureEcranData(nom)
     stockEquation=Horizon(imBrute,resolutionAngulaire,resolutionDistance,nblignes)
     [imBrute,aCentre,bCentre]=reconstructionCercleInconnu(constructionMatriceAccumulatriceCercleInconnu(traitementImageCannyGradient(imBrute, stockEquation), pasDeRayon,rayonMini,resolutionAngulaire,resolutionDistance,resolutionAngulaireCercleInter),imBrute, pasDeRayon,rayonMini,resolutionAngulaire,resolutionDistance,resolutionAngulaireCercleInter)
@@ -506,10 +435,8 @@ def totalCam(nom,pasDeRayon,rayonMini,resolutionAngulaire,resolutionDistance,res
     print("coordonnées par rapport au centre de l image (centre optique) : ", A[0][round(bCentre/20)][round(aCentre/20)], A[1][round(bCentre/20)][round(aCentre/20)])
 
 
-#totalCam("blablabla3.jpg",5,50,1,4,128,2)
 
-
-# def a():
+# def a(): #algorithme déjà proposé par uen bibliothère python : très rapide, mais très sensible au bruit, imprécis, non robuste, inexact, approximatif
     image = cv2.imread("cercle.jpg")
     image=cv2.cvtColor(image,cv2.COLOR_GRAY2BGR)
     #th,image=cv2.threshold(image,90,255,cv2.THRESH_BINARY)
@@ -576,7 +503,7 @@ def captureDistance():
 
     tof.stop_ranging()
     tof.close()
-    return distance/10 #renvoie la valeur en millimètres
+    return distance/10 #renvoie la valeur en centimètres
 
 
 ###capture d'écran + données !
