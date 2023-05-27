@@ -42,7 +42,7 @@ on va voir ce que renvoie l'algorithme que l'on a élaboré pour différentes r�
 
 
 Fonctionnement de la transformée de Hough : [1]
-Au lieu de rester dans un repère cartésien standard qui poserait des soucis de calculs pour le coefficient directeur d'une droite quasiment verticale, et qui nécessiterai une mémoire trop grande pour réer un plan de hough contenant ses valeurs, on passe dans un autre repère qui s'affranchi de ces contraintes 
+Au lieu de rester dans un repère cartésien standard qui poserait des soucis de calculs pour le coefficient directeur d'une droite quasiment verticale, et qui nécessiterai une mémoire trop grande pour créer un plan de hough contenant ses valeurs, on passe dans un autre repère qui s'affranchi de ces contraintes 
 
 ![représentation](https://github.com/hacktivist25/ballTracking/assets/125929174/9996d755-cf6f-4159-a651-5bf480d9f6ee)
 
@@ -59,7 +59,7 @@ Pour chaque point d'intérêt (qui est un point de contour, trouvé par un filtr
   
 3-Placer le point (theta, rho) sur le plan
    
-La transformé de hough/l'application de cet algorithme à un point donne une courbe pareille : 
+La transformée de hough/l'application de cet algorithme à un point donne une courbe pareille : 
 
 ![un point](https://github.com/hacktivist25/ballTracking/assets/125929174/6dfd9711-f096-49c4-bb88-48b13c3fe29a)
 
@@ -67,7 +67,7 @@ La transformé de hough/l'application de cet algorithme à un point donne une co
  
  ![plan Hough](https://github.com/hacktivist25/ballTracking/assets/125929174/e1ef9c5d-9ce2-44f3-a5ce-d1d6e487ed46)
  
- Le point le plus blanc, c'est à dire celui sur lequel beaucoup de droites passent/pour lequel beaucoup de points ont cette coordonnée en commun, est un maximum, et est l'endroit sur le plan de hough où  il est probable qu'il y ait une droite sur le plan cartésien : plusieurs points pour lesquels ont a effectué l'algorithme du dessus, s'ils sont alignés, possèdent une droite pour laquelle ils ont les mêmes coordonnées rho et theta : cette droite passe par tout ces points, et a les mêmes coordonnées rho et theta pour toutes, or pour une coordonnée rho et theta passe une et une seule droite : cette droite que chacun des points d'intérêts "connait" est en fait la même pour tous, montrant que ces points sont alignés
+ Le point le plus blanc, c'est à dire celui sur lequel beaucoup de droites passent/pour lequel beaucoup de points ont cette coordonnée en commun, est un maximum, et est l'endroit sur le plan de hough où  il est probable qu'il y ait une droite sur le plan cartésien : plusieurs points pour lesquels on a effectué l'algorithme du dessus, s'ils sont alignés, possèdent une droite pour laquelle ils ont les mêmes coordonnées rho et theta : cette droite passe par tout ces points, et a les mêmes coordonnées rho et theta pour toutes, or pour une coordonnée rho et theta passe une et une seule droite : cette droite que chacun des points d'intérêts "connait" est en fait la même pour tous, montrant que ces points sont alignés
  On récupère alors les coordonnées de ce point maximal, et on est capable d'en donner l'équation dans le plan cartésien avec la transformée inverse [2]:
  
  ![equa inverse](https://github.com/hacktivist25/ballTracking/assets/125929174/0512534d-becd-4da3-9f03-67bd13e69422)
@@ -90,7 +90,7 @@ Nous utilisons une fonction toute faite dans la bibliothèque openCV pour appliq
 
 Voyons ce que cela donne pour le moment :
 
-Tout d'abord, l'image de base déjà montrée au dessus est soumise à l'algorithme.
+Tout d'abord, l'image de base déjà montrée au-dessus est soumise à l'algorithme.
 L'algorithme la transforme en noir et blanc et prend les contours avec un seuillage automatique sur un filtre de canny :
 
 ![ligne NB](https://github.com/hacktivist25/ballTracking/assets/125929174/13e767e5-f338-47de-9625-d04c508b7a22)
@@ -99,11 +99,11 @@ On construit ensuite le plan de hough avec une matrice accumulatrice :
 On initialise une matrice avec une taille pouvant accueillir toutes les coordonnées de hough possibles de droites dans l'image : 
 Theta varie de 0 à 180°, et la distance entre l'origine du repère (le point tout en haut à gauche de l'image) maximale est la taille de la diagonale de l'image, c'est à dire  D = $\sqrt{3280² + 1845²}$
 La matrice accumulatrice est donc de taille Dx180
-Et pour chaque point auquel on applique la transformée, on incrémente de 1 l'élément de la matrice accumulatrice [rho,theta] (on appelle cela un vote pour un point/une coordonnée) : on trouvera ainsi les maximas, c'est à dire les points (rho,theta) du plan de hought pour lesquels le plus de points d'intérêts ont une droite ayant de telles coordonnées.
-Cette matrice a aussi le bon goût de pouvoir réduire sa taille suivant si l'on veut optimiser le temps de calcul en sacrifiant un peu de précision : on peut créer une matrice accumulatrice deux fois plus petite, pour cela il suffit de ne s'intéresser qu'à un point sur quatre de l'image en noir et blanc : le risque de passer à côté d'une partie non négligeable des poitns d'intérêts par un tel procédé est très petite, mais si l'on voulait se rassurer, on pourrait appliquer un filtre moyenneur avant de le faire pour s'assurer de ne rien manquer.
+Et pour chaque point auquel on applique la transformée, on incrémente de 1 l'élément de la matrice accumulatrice [rho,theta] (on appelle cela un vote pour un point/une coordonnée) : on trouvera ainsi les maximas, c'est à dire les points (rho,theta) du plan de hough pour lesquels le plus de points d'intérêts ont une droite ayant de telles coordonnées.
+Cette matrice a aussi le bon goût de pouvoir réduire sa taille suivant si l'on veut optimiser le temps de calcul en sacrifiant un peu de précision : on peut créer une matrice accumulatrice deux fois plus petite, pour cela il suffit de ne s'intéresser qu'à un point sur quatre de l'image en noir et blanc : le risque de passer à côté d'une partie non négligeable des points d'intérêts par un tel procédé est très petite, mais si l'on voulait se rassurer, on pourrait appliquer un filtre moyenneur avant de le faire pour s'assurer de ne rien manquer.
 
 
-Voici quelques tests : tout d'abord avec une résolution en distance de 1 pour 1 (on prend en compte tout les pixls de l'image, et une résolution angulaire d'1° : C'est à dire que lors de la transformation de Hough, on fait varier l'angle de la dratequi passera par le point d'intérêt degré par degré.
+Voici quelques tests : tout d'abord avec une résolution en distance de 1 pour 1 (on prend en compte tout les pixls de l'image, et une résolution angulaire d'1° : C'est à dire que lors de la transformation de Hough, on fait varier l'angle de la droite qui passera par le point d'intérêt degré par degré.
 
 ![plan de hough reperage max](https://github.com/hacktivist25/ballTracking/assets/125929174/ea53bd0a-e7a0-49d4-a89d-3df8f85f1ae4)
 
@@ -118,7 +118,7 @@ On trouve alors cette droite, que l'on transpose sur l'image brute de la caméra
 
 
 
-Cette fois : distance 4 pour 1, 0.1° de résolution angulaire : on sacrifie un peu de données images pour de la précision angulaire pour avoir un meilleur coefficiet directeur :
+Cette fois : distance 4 pour 1, 0.1° de résolution angulaire : on sacrifie un peu de données images pour de la précision angulaire pour avoir un meilleur coefficient directeur :
 
 ![plan hough reperage max](https://github.com/hacktivist25/ballTracking/assets/125929174/abf96d39-29aa-4e34-9c9f-fe83391898e9)
 ![droite reconnue](https://github.com/hacktivist25/ballTracking/assets/125929174/d6f479f2-f502-495a-932a-5499355673af)
@@ -133,8 +133,8 @@ puis 4 pour 1 en distance, 1° en résolution angulaire :
 ![rendu](https://github.com/hacktivist25/ballTracking/assets/125929174/e37097dd-0618-4c10-994e-d0e6efec54b2)
 
 
-Malgré que les coefficients semblent un peu éloignés de ceux que l'on doivent trouver, la précision à l'oeil reste satisfaisante : bien évidemment, le traitement avec un pas de rotation de 0.1° lors de la transformaée conduit à des résultats plus précis, mais qui prennent bien plus de temps
-Même avec la configuration la plus rapide, le temps d'exécution reste si lent qu'on est bien loin de s'approcher du temps réel... (Màj : on aurait dû utiliser le language C qui utilise moins de ressources, et exploiter le multithreading et multiprocessing...)
+Malgré que les coefficients semblent un peu éloignés de ceux que l'on doivent trouver, la précision à l'oeil reste satisfaisante : bien évidemment, le traitement avec un pas de rotation de 0.1° lors de la transformée conduit à des résultats plus précis, mais qui prennent bien plus de temps
+Même avec la configuration la plus rapide, le temps d'exécution reste si lent qu'on est bien loin de s'approcher du temps réel... (Màj : on aurait dû utiliser le langage C qui utilise moins de ressources, et exploiter le multithreading et multiprocessing...)
 
 
 
@@ -145,14 +145,14 @@ Prenons cette image :
 
 Le repère que l'on veut (les axes x et y) peuvent ne pas être détectés : le rebord de la feuille peut par exemple passer pour une droite, et l'algorithme peut prendre ce rebord de feuille comme un de nos axes, et pas le petit vecteur pour le repère... 
 Après BEAUCOUP de recherches et de tests, nous n'avons pas réussi à le corriger : La méthode la plus prometteuse était celle-ci : 
-En dessinant des flèches épaisses pour le repère et en appliquant une opération de fermeture (on dilate l'image puis on l'érode), on aurait pu obtenir un gros trait blanc pour nos axes, vu l'allure qu'ils ont ci dessous :
+En dessinant des flèches épaisses pour le repère et en appliquant une opération de fermeture (on dilate l'image puis on l'érode), on aurait pu obtenir un gros trait blanc pour nos axes, vu l'allure qu'ils ont ci-dessous :
 
 ![transformation_Canny](https://github.com/hacktivist25/ballTracking/assets/125929174/eb9cb2bd-af74-4522-a8aa-82e248e62cb8)
 
 Les axes auraient étés "remplis" de blanc (points d'intérêts), et ceux-ci auraint produit sur le plan de hough non pas un maxima "ponctuel", mais un ensemble de valeurs "hautes"/beaucoup votées sur une zone circulaire réduite : ainsi, au lieu de chercher le max/le point qui a eu le plus de votes, on cherche la zone ou la moyenne des votes sur une zone circulaire du plan est la plus haute : ça n'a pas fonctionné comme souhaité, en plus d'alourdir très considérablement les calculs
-On doit donc contrôler l'environnement pour que l'on ait une transformée de canny commme ci-dessus, sans que les bords de la feuille ne soient détectés, grâce à un bon seuillage.
+On doit donc contrôler l'environnement pour que l'on ait une transformée de canny comme ci-dessus, sans que les bords de la feuille ne soient détectés, grâce à un bon seuillage.
 
-Maitenant, on remarque que les droites du repère sont dédoublées, car l'épaisseur du repère tracé au stylo n'est pas nulle : 
+Maintenant, on remarque que les droites du repère sont dédoublées, car l'épaisseur du repère tracé au stylo n'est pas nulle : 
 Pour ne pas qu'il détecte deux droites parallèles et côte à côte, il suffit de chercher deux maxima qui aient une certaine distance l'un de l'autre sur le plan de hough : une distance/norme supérieure à 20 entre les coordonnées des deux points suffit pour ne pas capter deux fois la même droite décalée
 Cela donne donc ceci :
 
@@ -163,7 +163,7 @@ On trouve bien deux maximas éloignés l'un de l'autre : reste à effectuer les 
 ![droites](https://github.com/hacktivist25/ballTracking/assets/125929174/8bed9042-a510-4381-922e-a9b10ba04093)
 ![equaDroites](https://github.com/hacktivist25/ballTracking/assets/125929174/52d347fa-9c94-4f99-ac3d-c998f83ea64c)
 
-Les droites collent bien au repère (le droite verticale est bien là, même si peu visible)
+Les droites collent bien au repère (la droite verticale est bien là, même si peu visible)
 
 
 
@@ -171,21 +171,21 @@ Maintenant on peut se lancer sur la transformée de Hough pour trouver un cercle
 Le principe est le même [6],[7]
 Sauf que l'on peut garder le plan x,y : plus besoin de faire des transformées en (rho, theta)
 
-On commence déjà par "laver" l'ancienne image des droites que l'on a trouvé pour ne pas perturber le futur processus de détection de cercle : on otient alors ceci :
+On commence déjà par "laver" l'ancienne image des droites que l'on a trouvé pour ne pas perturber le futur processus de détection de cercle : on obtient alors ceci :
 
 ![cannySansLignes](https://github.com/hacktivist25/ballTracking/assets/125929174/3dfaed0c-693a-4603-b84b-e8b4ca1beb65)
 
-On s'est débarassé des deux lignes du repère :
-En principe, les points blancs que l'on voit sont dû aux ombres de l'image initiale, mais ils ressemblent à un bruit poivre et sel, on pourrait donc en principe les traiter en convoluant l'image avec un filtre moyenneur ou Gaussien, sans que le flou apporté par le proessus ne soit excessivement gênant pour la détection de cercle... Mais comme une opération si simple conceptuellement en python mange du temps processeur, nous ne le ferons pas.
+On s'est débarrassé des deux lignes du repère :
+En principe, les points blancs que l'on voit sont dû aux ombres de l'image initiale, mais ils ressemblent à un bruit poivre et sel, on pourrait donc en principe les traiter en convoluant l'image avec un filtre moyenneur ou Gaussien, sans que le flou apporté par le processus ne soit excessivement gênant pour la détection de cercle... Mais comme une opération si simple conceptuellement en python mange du temps processeur, nous ne le ferons pas.
 
 ![Capture d’écran 2023-05-22 141347](https://github.com/hacktivist25/ballTracking/assets/125929174/118f588b-2ded-4cd1-9eb8-3f5a8f097163)
 
 On garde le repère cartésien standard, et pour chaque point d'intérêt/de contour, on dessine un cercle autour de ce point
 On le fait pour des rayons de cercle de plus en plus grand
 On sauvegarde tout cela dans une grosse matrice accumulatrice en trois dimension : la même dimension que l'image, dupliquée autant de fois qu'il y a de rayons possibles détectables, en fonction de la précision que l'on souhaite y apporter
-On remarque alors que si les cercles que l'on dessine autour des points d'intérêt ont le même rayon que le cercle préssuposé où ces points se situent, ils s'intersectent au centre du cercle présupposé.
+On remarque alors que si les cercles que l'on dessine autour des points d'intérêt ont le même rayon que le cercle présupposé où ces points se situent, ils s'intersectent au centre du cercle présupposé.
 Ainsi, ce point aura un très grand nombre de vote et sera le maximum de la matrice accumulatrice : on a alors ses coordonnées en fonction de sa position dans la matrice, et son rayon en fonction de la première dimension de la matrice accumulatrice : 
-La matrice est de taille N,X,Y avec X et Y les dimensions en pixels de l'image (3280 par 1845, et N dépend de la présision/le pas entre les rayons des cercles que l'on dessine)
+La matrice est de taille N,X,Y avec X et Y les dimensions en pixels de l'image (3280 par 1845, et N dépend de la précision/le pas entre les rayons des cercles que l'on dessine)
 
 Au lieu de tracer un cercle complet, on optimise par un calcul de gradient : 
 Pour chaque point d'intérêt, au lieu de tracer un cercle complet, on calcule le gradient de ce point d'intérêt sur l'image noir et blanc du dessus : le gradient nous donnera alors les directions dans lesquelles tracer des arcs de cercle : on prend juste deux noyaux Gx et Gy donnant le gradient en x et en y, et on obtient l'angle absolu par la norme euclidienne des deux vecteurs, et on trace des arcs de cercle en direction de cet angle, et à l'opposé, sur une amplitude de 45° au vu de la précision de l'angle obtenu par cette méthode : on trace ainsi seulement un quart de cercle pour chaque points plutôt qu'un cercle complet, ce qui constitue une optimisation : c'est la plus forte que nous puissions faire.
@@ -194,8 +194,9 @@ si on essaye maintenant de détecter le cercle, voilà ce que cela donne, avec u
 
 ![gough cercle](https://github.com/hacktivist25/ballTracking/assets/125929174/bf156d16-3d50-43de-9b7d-1f515b168234)
  
+(bien que l’on aie l’impression de voir une multitude de cercles, ne vous y trompez pas, on ne voit que des huitièmes de cercles partout) 
 Voilà le plan pour lequel on aurait un maximum : il se situe au 42ème plan de notre matrice accumulatrice 3D, et les coordonnées du maximum sur ce plan sont (1392, 952) : ce sont les coordonnées de son centre, qu'on note aCentre et bCentre
-Le 42ème plan représent un rayon de 260 pixels, puisque l'on commence nos recherches à partir d'un cercle de rayon 50 pixels avec un pas de 5 : 42*5 + 50 = 260
+Le 42ème plan représente un rayon de 260 pixels, puisque l'on commence nos recherches à partir d'un cercle de rayon 50 pixels avec un pas de 5 : 42*5 + 50 = 260
 Et voilà le cercle trouvé, avec ses coordonnées aCentre, bCentre, et son rayon, trouvé juste avant :
 
 ![finalite](https://github.com/hacktivist25/ballTracking/assets/125929174/5bb32c74-d685-4b8b-a4e3-d74c5479794f)
@@ -207,7 +208,7 @@ Cela colle parfaitement avec la balle que l'on voit sur le plan :
 Reste à convertir ces coordonnées pixel en coordonnées réelles : 
 C'est là qu'entre en jeu notre capteur de distance et notre centrale inertielle, ainsi que d'autres specs de notre caméra.
 
-Intéressons nous d'abord aux deux capteurs que nous utiliserons :
+Intéressons-nous d'abord aux deux capteurs que nous utiliserons :
 Le capteur de distance : VL53L0X de chez STMicroElectronics : son GitHub pour l'installation de la bibliothèque, les commandes... [9]
 Sa fiche technique [9]
 
@@ -215,7 +216,7 @@ Sa fiche technique [9]
 ![tech specs](https://github.com/hacktivist25/ballTracking/assets/125929174/dee71896-b7ca-4d05-a8e8-fc87ef06d9c0)
 ![specs](https://github.com/hacktivist25/ballTracking/assets/125929174/2d262447-3f35-463d-b301-8e09cad7fa69)
 
-On retiens qu'il fonctionne via un protocole I2C, son adresse est 0x22 (on a reprogrammé l'adresse)
+On retient qu'il fonctionne via un protocole I2C, son adresse est 0x22 (on a reprogrammé l'adresse)
 L'horloge qui cadence l'envoi de données de l'esclave (le capteur) jusqu'au maître (la carte raspberryPi Model4B) va jusqu'à 400kHz
 Il fonctionne en 3.3 Volts
 
@@ -226,7 +227,7 @@ L'accéléromètre, partie de l'IMU MP9250 : sa fiche technique : [10] et son gi
 ![specs](https://github.com/hacktivist25/ballTracking/assets/125929174/f3e2d720-278b-4b61-93ae-3c1bc23ba97d)
 ![table](https://github.com/hacktivist25/ballTracking/assets/125929174/e910169f-0717-43eb-96e2-199f184d4d01)
 
-idem, fonctionne par protocole I2C, son adresse est 0x68, fonctionne avec une horloge SCL jusqu'à 400kHz.
+Idem, fonctionne par protocole I2C, son adresse est 0x68, fonctionne avec une horloge SCL jusqu'à 400kHz.
 il fonctionne en 5 Volts.
 
 Enfin, on regarde la fiche technique du raspberry pour voir comment faire les branchements : [12]
@@ -238,13 +239,13 @@ on obtient le schéma de branchements suivant :
 
 ![sch](https://github.com/hacktivist25/ballTracking/assets/125929174/a3137cee-86ea-44dd-817a-ac6f8d4fe1b2)
 
-et on peut les faire fonctionner correctement avec les fonctions caputreAngle et captureDistance à la toute fin du code balltracking.py :
-captureDistancene ne fait que lire la distance du capteure VL53L0X
+et on peut les faire fonctionner correctement avec les fonctions captureAngle et captureDistance à la toute fin du code balltracking.py :
+captureDistance ne ne fait que lire la distance du capteure VL53L0X
 captureAngle ne fait que lire les valeurs des accéléromètres selon les 3 axes de l'IMU, et en déduit le pitch avec la formule : pitch = 180 * m.atan (accelerationX/m.sqrt(accelerationY*accelerationY + accelerationZ*accelerationZ))/m.pi; 
 
 ![Pitch](https://github.com/hacktivist25/ballTracking/assets/125929174/888faa6a-9bc1-4cd6-8dfd-e1b3a295954a)
 
-Le but va être d'avoir un pitch de -90° pour que la caméra pointe parfaitement vers le dessous pour simplifier les calculs : on ne prend pas en compte la distorsion caméra, au vu de cette photo : les droite ssont bein droites, on a pas d'effet en barillet ou en coussinet. 
+Le but va être d'avoir un pitch de -90° pour que la caméra pointe parfaitement vers le dessous pour simplifier les calculs : on ne prend pas en compte la distorsion caméra, au vu de cette photo : les droite sont bien droites, on a pas d'effet en barillet ou en coussinet. 
 
 ![calibrageBas](https://github.com/hacktivist25/ballTracking/assets/125929174/58143319-4f67-47ce-ba93-a6934d192753)
 
@@ -260,7 +261,7 @@ On a d1 : y = a1x + b1
 et d2 : y = a2x + b2
 
 on pose alors (a1-a2)x + (b1-b2) = 0
-d'où x = $\frac(b2-b1}{a1-a2}$
+d'où x = $\frac{b2-b1}{a1-a2}$
 et on en déduit l'ordonnée d'intersection :
 Des deux équations, on déduit deux vecteurs directeurs, et il n'y a plus qu'à faire des changements de repère en usant le module vector de python (pas encore fait : de toute façon, le projet sera transposé ultérieurement en C pour attendre les objectifs de temps réel)
 
