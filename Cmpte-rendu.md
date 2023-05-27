@@ -236,7 +236,7 @@ Enfin, on regarde la fiche technique du raspberry pour voir comment faire les br
 
 on obtient le schéma de branchements suivant :
 
-[sch.pdf](https://github.com/hacktivist25/ballTracking/files/11566803/sch.pdf)
+![sch](https://github.com/hacktivist25/ballTracking/assets/125929174/a3137cee-86ea-44dd-817a-ac6f8d4fe1b2)
 
 et on peut les faire fonctionner correctement avec les fonctions caputreAngle et captureDistance à la toute fin du code balltracking.py :
 captureDistancene ne fait que lire la distance du capteure VL53L0X
