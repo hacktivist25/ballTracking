@@ -1,11 +1,25 @@
+BELARIBI Ryan
+MEDIENE Yanis
+FISE1 D
+
+                           Suivi d'une balle bleue par caméra raspberrypi
+                           
+But : suivre une balle bleue, de diamètre 3cm, se déplaçant sur un plan, grâce à la transformée de hough
+Il faudra dessiner un repère au sol et repérer les coordonnées de la balle par rapport à ce repère
+
+On a pour cela un RaspberryPi Model 4B [14] : 4Go de RAM, microprocesseur Quatre-coeurs à 1.5 Ghz, ports USB et SD, supporte le 50fps 1080 p : il est performant pour sa taille
+On a aussi la raspberrypi camera model v2
+
+![camera](https://github.com/hacktivist25/ballTracking/assets/125929174/7fadbc78-6d87-488a-ab79-ebf49ca665d7)
+
+Commençons sans plus attendre, nous avons (à tort) opté pour python, déjà présent sur le raspberry lors de sa configuration initiale (Linux Debian 64bit classique)
+on a réglé la caméra en autorisant les communication entre celle-ci et la raspberrypi, et on a prit une photo d'une ligne tracée sur une feuille pour prendre en main la transformée de hough
+
 On ouvre la photo LIGNE_NB sur paint pour avoir ses coordonnées en pixel, et on calcule nous-même à la main l'équation de la droite dans le repère de l'image
 Le but est de connaître le résultat pour voir si l'algorithme ne fait pas n'importe quoi
 
-
-
-
 NOTE IMPORTANTE :
-Le repère : x vers la droite, y vers le bas, les repères d'images sur python et image sont les mêmes : l'origine se situe tout en haut à gauche de l'image
+Le repère : x vers la droite, y vers le bas, origine tout en haut à gauche de l'image : ces repères d'images sur python et sur l'image sont les mêmes.
 
 ![ligne](https://github.com/hacktivist25/ballTracking/assets/125929174/8ee5481b-38cc-4e5d-a863-20aced7b4acb)
 
@@ -13,8 +27,8 @@ pixels des extrémités :
 - Un pixel en   (1036 ; 896)
 - l'autre en    (2790 ; 938)
 
-a= \frac{ y2-y1 }{ x2-x1 }
- = \frac{ 938 - 896 }/{ 2790 - 1036 }
+a= $\frac{ y2-y1 }{ x2-x1 }$
+ = $\frac{ 938 - 896 }/{ 2790 - 1036 }$
  = 0,0239
 
 b=y2-ax2
@@ -27,39 +41,38 @@ l'équation doit être 0.0239x + 871.2 dans le repère de l'image
 on va voir ce que renvoie l'algorithme que l'on a élaboré pour différentes résolutions angulaires et de distance : 
 
 
-
-
-
 Fonctionnement de la transformée de Hough : [1]
-Au lieu de rester dnas un repère cartésien standard qui poserait des soucis de calculs pour le coefficient directeur d'une droite quasiment verticale, et qui nécessiterai une mémoire trop grande, on passe dans un autre repère qui s'affranchi de ces contraintes 
+Au lieu de rester dans un repère cartésien standard qui poserait des soucis de calculs pour le coefficient directeur d'une droite quasiment verticale, et qui nécessiterai une mémoire trop grande pour réer un plan de hough contenant ses valeurs, on passe dans un autre repère qui s'affranchi de ces contraintes 
 
 ![représentation](https://github.com/hacktivist25/ballTracking/assets/125929174/9996d755-cf6f-4159-a651-5bf480d9f6ee)
 
-Le repère de hough possède en abscisse et en ordonnées non pas x et y, mais thetoa et rho
-On voit que theta est l'angle que forme se segment perpendiculaire à la droite reliant deux points, et passant pas l'origine, avec l'axe des abscisses de l'image (x), et rho représente la longueur du segment précédent
-Ces valeurs seront reportées sur ce que l'on appelle plan de Hough
+Le repère de hough possède en abscisse et en ordonnées non pas x et y, mais theta et rho
+On voit que theta est l'angle que forme le segment perpendiculaire à la droite reliant deux points, et passant pas l'origine, avec l'axe des abscisses de l'image (x), et rho représente la longueur du segment précédent
+Ces valeurs seront reportées sur ce que l'on appelle le "plan de Hough"
 
-On obtient un plan de hough en apppliquant l'algorithme suivant :
+On obtient un plan de hough en appliquant l'algorithme suivant :
 Pour chaque point d'intérêt (qui est un point de contour, trouvé par un filtrage de canny) :
-1-Fare passer des droites par ce point, dans toutes les directions (faire varier theta de 0 à 180°
+1-Faire passer des droites par ce point, dans toutes les directions (faire varier theta de 0 à 180°, et faire passe des droites d'angle theta, passant par ce point d'intérêt)
 2-Calculer le rho correspondant à chaque fois, à l'aide de la formule de changement de repère [2] :
 
 ![equa de base](https://github.com/hacktivist25/ballTracking/assets/125929174/ba059c49-816b-48e6-bb4e-31d5baab5d81)
   
 3-Placer le point (theta, rho) sur le plan
    
-   
-   
- Une fois cela fait, le plan de hough devrait ressembler à quelque chose comme cela :
+La transformé de hough/l'application de cet algorithme à un point donne une courbe pareille : 
+
+![un point](https://github.com/hacktivist25/ballTracking/assets/125929174/6dfd9711-f096-49c4-bb88-48b13c3fe29a)
+
+ Une fois cela fait sur tout les points, le plan de hough devrait ressembler à quelque chose comme cela :
  
  ![plan Hough](https://github.com/hacktivist25/ballTracking/assets/125929174/e1ef9c5d-9ce2-44f3-a5ce-d1d6e487ed46)
  
- Le point le plus blanc, c'est à dire celui sur lequel beaucoup de droites passent/pour lequel beaucoup de points ont cette coordonnée en commun, est un maximum, et est l'endroit sur le plan de hough où il est probable qu'il y aie une droite sur le plan cartésien
+ Le point le plus blanc, c'est à dire celui sur lequel beaucoup de droites passent/pour lequel beaucoup de points ont cette coordonnée en commun, est un maximum, et est l'endroit sur le plan de hough où  il est probable qu'il y ait une droite sur le plan cartésien : plusieurs points pour lesquels ont a effectué l'algorithme du dessus, s'ils sont alignés, possèdent une droite pour laquelle ils ont les mêmes coordonnées rho et theta : cette droite passe par tout ces points, et a les mêmes coordonnées rho et theta pour toutes, or pour une coordonnée rho et theta passe une et une seule droite : cette droite que chacun des points d'intérêts "connait" est en fait la même pour tous, montrant que ces points sont alignés
  On récupère alors les coordonnées de ce point maximal, et on est capable d'en donner l'équation dans le plan cartésien avec la transformée inverse [2]:
  
  ![equa inverse](https://github.com/hacktivist25/ballTracking/assets/125929174/0512534d-becd-4da3-9f03-67bd13e69422)
 
- De là, on obtient notre équation, avec des coefficients en pixels, pour notre plan d'image : on s'occupera de la conversion en distance réalle plus tard
+ De là, on obtient notre équation, avec des coefficients en pixels, pour notre plan d'image : on s'occupera de la conversion en distance réelle plus tard
 
 
 
@@ -68,27 +81,26 @@ On prend d'abord une photo avec l'appareil photo de la caméra RaspberryPi Model
 
 ![Picamera Module V2](https://github.com/hacktivist25/ballTracking/assets/125929174/86944bda-2170-4753-8654-5de31a99d428)
 
-On retiendra pour le moment qu'elle prend des photos de résolution 3280 px / 1845 px
-Les photos sont en format RGB
+On retiendra pour le moment qu'elle prend des photos de résolution 3280 px / 1845 px (nous avons réglé la deuxième dimension pour coller à un format 16/9) (caprice de notre part + réduction des données (légère)
+Les photos sont en format RGB, impliquant une lourdeur des données (le format N&B aurait pu suffire, puisqu'on ne se sert à aucun moment de la couleur de la balle...)
 On commence par binariser le format pour avoir une image en niveaux de gris (grayscaling)
-Ensuite, la détextion de bords se fait en recherchant les gradients de l'image : UN gradient renvoie une valeur vectorielle qui point vers la direction de l'image à partir d'un point telle que la variation de niveau de gris soit la plus forte dans la direction : voilà ce qu'est un gradient, et il permet en effet de détecter les bords, car les bords desobjets marquent une transition brutale avec un autre objet, un fond... [5]
-Nous utilisons une fonction toute faite dnas la bibliothèque openCV
+Ensuite, la détection de bords se fait en recherchant les gradients de l'image : Un gradient renvoie une valeur vectorielle qui pointe vers la direction de l'image (à partir d'un point auquel on applique le noyau gradient) telle que la variation de niveau de gris soit la plus forte dans cette direction : il permet en effet de détecter les bords en seuillant la valeur de celui-ci, car les bords des objets marquent une transition brutale avec un autre objet, un fond... [5]
+Nous utilisons une fonction toute faite dans la bibliothèque openCV pour appliquer le filtre de canny
 
 
 Voyons ce que cela donne pour le moment :
 
-Tout d'abord, l'image de base déjà montrée au dessus est soumis à l'algorithme.
+Tout d'abord, l'image de base déjà montrée au dessus est soumise à l'algorithme.
 L'algorithme la transforme en noir et blanc et prend les contours avec un seuillage automatique sur un filtre de canny :
 
 ![ligne NB](https://github.com/hacktivist25/ballTracking/assets/125929174/13e767e5-f338-47de-9625-d04c508b7a22)
 
-On construit ensuite le fameux plan de hough avec une matrice accumulatrice : 
-On initialise une matrice avec une taille pouvant accueillir toutes les coordonnées possibles de droites dnas l'image : 
-Theta varie de 0 à 180°, et la distance entre l'origine du repère (le point tout en haut à gauche de l'image) maximale est de la taille de la diagonale de l'image, c'est à dire  D = sqrt(3280² + 1845²)
+On construit ensuite le plan de hough avec une matrice accumulatrice : 
+On initialise une matrice avec une taille pouvant accueillir toutes les coordonnées de hough possibles de droites dans l'image : 
+Theta varie de 0 à 180°, et la distance entre l'origine du repère (le point tout en haut à gauche de l'image) maximale est la taille de la diagonale de l'image, c'est à dire  D = $\sqrt{3280² + 1845²}$
 La matrice accumulatrice est donc de taille Dx180
-Et pour chaque point auquel on applique la transformée (LIGNE 41), on incrémente de 1 l'élément de la matrice accumulatrice [rho,theta] (on appelle cela un vote pour un point/une coordonnée) : on trouvera ainsi les maximas, c'est à dire les points (rho,theta) du plan de hought pour lesquels le plus de points d'intérêts peuvent passer
-Cetta matrice a aussi le bon goût de pouvoir réduire sa taille suivant si l'on veut optimiser le temps de calcul en sacrifiant un peu de précision : on peut créer une matrice accumulatrice deux fois plus petite, pour cela il suffit de ne s'intéresser qu'à un point sur quatre de l'image en noir et blanc
-
+Et pour chaque point auquel on applique la transformée, on incrémente de 1 l'élément de la matrice accumulatrice [rho,theta] (on appelle cela un vote pour un point/une coordonnée) : on trouvera ainsi les maximas, c'est à dire les points (rho,theta) du plan de hought pour lesquels le plus de points d'intérêts ont une droite ayant de telles coordonnées.
+Cette matrice a aussi le bon goût de pouvoir réduire sa taille suivant si l'on veut optimiser le temps de calcul en sacrifiant un peu de précision : on peut créer une matrice accumulatrice deux fois plus petite, pour cela il suffit de ne s'intéresser qu'à un point sur quatre de l'image en noir et blanc : le risque de passer à côté d'une partie non négligeable des poitns d'intérêts par un tel procédé est très petite, mais si l'on voulait se rassurer, on pourrait appliquer un filtre moyenneur avant de le faire pour s'assurer de ne rien manquer.
 
 
 Voici quelques tests : tout d'abord avec une résolution en distance de 1 pour 1, et une résolution angulaire d'1° : C'est à dire que lors de la transformation de Hough (LIGNE 41), on fait varier theta d'un degré.
@@ -254,6 +266,50 @@ On a 1,7xm pour l'axe x, alors que la balle a un rayon de 1,5cm
 Et on a 0,4 cm de décalage en y avec le centre de l'image
 C'est donc "relativement" précis.
 
+
+Concernant les capteurs : 
+Ils sont bien branchés : en tapant la commande : sudo i2cdetect -y 1
+On obtient ceci lorsque rien n'est connecté.
+
+![I2C vide](https://github.com/hacktivist25/ballTracking/assets/125929174/e665774d-eb79-4630-8d97-a86896267cd4)
+
+Et on verra 0x66 et 0x22 lorsque kes deux modules sont connectés (il ne faut pas oublier d'autoriser l'interface I2C dans les configurations du raspberry)
+
+Les valeurs apportées par les capteurs sont cohrentes : on leur faisant donner une traitaines de valeurs par seconde, on constate que la valeur de l'angle calculé ainsi que celle de la distance à un objet fonctionne parfaitement
+Il aurait été bienvenu d'analyser si la commmunication se faisait bien à la fréqence par dééfaut des appareils, constater la trame envoyée par le maître raspberry demandant des mesures aux capteurs, et ceux-ci répondant.
+
+Le protocole I2C : [13]
+
+Les deux capteurs fonctionnentn en protocole I2C : c'est un procesus de communication half-duplex : un maître contrôle un ou plusieurs esclaves, que seront les capteurs 
+
+![I2C sch](https://github.com/hacktivist25/ballTracking/assets/125929174/7a481d52-0534-4fc4-923d-a5b44b310ec5)
+
+La communication comprend deux canaux de communications : Un pour l'horloge de synchronisation SCL et un pour les données SDA 
+Les bits de données SDA ne sont lus que lorsque l'horloge SCL est à l'état Haut
+
+![image](https://github.com/hacktivist25/ballTracking/assets/125929174/e60c94b7-ec5c-4811-b81c-71dc9fe9570a)
+
+Il aurait été bienvenu de voir ces valeurs électiques de transmission si on avait mieux géré notre temps... il a été très majoitairement déployé à optimiser notre algorithme de hough : l'exécution du code n'est pas médiocre du tout, il est même ce que l'on peut faire de mieux avec la précision souhaitée.
+Nos hrloges ont une cadence maximale de 400khz pour nos dex capteurs, ils fonctionennt donc en fast mode au mieux, mais la clock rate par défaut sur la grande majorité ds appareils est 100khz
+Notre IMU n'a pas le choix, elle est à 400kHz : 
+
+![I2C Specs](https://github.com/hacktivist25/ballTracking/assets/125929174/d84a7612-01fe-4e97-bc2c-05385b3fb89f)
+
+Notre capteur de distance lui peut fonctionner de 0Hz à 400kHz sans plus de détails Il aurait été bien de le vérifier à la main:
+
+![I2C Specs](https://github.com/hacktivist25/ballTracking/assets/125929174/39542db8-426e-44b3-b6a2-278de138655e)
+
+Cela aurait dû donner lieu à ce genre de trames si nous avions pu els observer, et on aurait spécifié la fréquence, les différentes grandeurs...
+
+![oscill](https://github.com/hacktivist25/ballTracking/assets/125929174/5ad12df7-73b9-4b98-b7d5-694b829319fb)
+
+La maitre annonce un it de start et donne l'adresse de l'eclave (il existe des adresses de broadcast) : l'eclave considéré répond par un bit d'aquittement ACKnowledge) ou non aquittement NACK
+Si aquittement, le maître envoie une command,e et l'esclave envoie un ACK
+Ensuite les rôles s'inversent : l'exlave envoie la donnée, le maitre envoie ACK, octets par octets : e dernier est un NACK, correspondant à un bit de stop : la communication prend alors fin
+
+Puisque les deux capteurs utilisent le même canal SCL, les horloges doivent évidemment êtres synchronisées entre les deux appareils esclaves !
+Sans que nous n'ayont rien eu à faire, les horloges étaient déjà synchronisées : l'envoie de données en continu (30 valeurs par secondes) de la part des deux appareils pendant 1 minutes n'a donné lieu à aucune erreur ni aucune valeur incohérent malgré que nous manipulions les capeurs en même temps pour en changer l'angle/la distance)
+
 [1] https://towardsdatascience.com/lines-detection-with-hough-transform-84020b3b1549
 [2] https://homepages.inf.ed.ac.uk/rbf/HIPR2/hough.htm
 [3] https://sbme-tutorials.github.io/2021/cv/notes/4_week4.html
@@ -266,3 +322,5 @@ C'est donc "relativement" précis.
 [10] https://invensense.tdk.com/wp-content/uploads/2015/02/PS-MPU-9250A-01-v1.1.pdf
 [11] https://github.com/FaBoPlatform/FaBo9AXIS-MPU9250-Python
 [12] https://pinout.xyz/pinout/pin7_gpio4#
+[13] https://fr.wikipedia.org/wiki/I2C
+[14] https://datasheets.raspberrypi.com/rpi4/raspberry-pi-4-datasheet.pdf
